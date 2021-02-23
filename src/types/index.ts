@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 interface previewChalObj {
   nameOfChallenge: string,
   conditions: string,
-  durationOfChallenge: string,
+  durationOfChallenge: string | number,
   chat_id: number
 }
 
@@ -37,4 +37,5 @@ interface IChallenge extends INewChallenge, Document {
 
 export {
   previewChalObj, ID, IChallenge, INewChallenge,
+  participant,
 };

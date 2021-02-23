@@ -1,9 +1,10 @@
 import { Scenes } from 'telegraf';
 import { getCurrentChallenge, updateCurrentChallenge, deleteCurrentChallenge } from '../../../db/challenge_crud';
-import renderMsgs from '../../helpers/renderMsgs';
+import challenge from '../../helpers/challenge';
+import renderMsgs from '../../helpers/render-msgs';
 import { controlChalKeyboard, exitKey, noAndYesKeyboard } from '../../keyboards';
 
-const { BaseScene, Stage } = Scenes;
+const { BaseScene } = Scenes;
 
 const controlMainScene = new BaseScene<Scenes.SceneContext>('controlMainScene');
 
@@ -21,10 +22,10 @@ controlMainScene.enter(async (ctx) => {
 
 controlMainScene.leave((ctx) => ctx.reply('выход из состояния челленджа'));
 
-controlMainScene.action(['exit', 'delchel', 'editconds', 'editname', 'startchel'], (ctx: Scenes.SceneContext) => {
+controlMainScene.action(['exit', 'delchel', 'editconds', 'editname', 'startchel'], async (ctx: Scenes.SceneContext) => {
   // @ts-ignore
   const command = ctx.callbackQuery.data;
-  const chatId = ctx.message?.chat!.id;
+  const chatId = ctx.chat?.id;
 
   switch (command) {
     case 'exit':
@@ -40,8 +41,15 @@ controlMainScene.action(['exit', 'delchel', 'editconds', 'editname', 'startchel'
     case 'delchel':
       ctx.scene.enter('deleteChalScene');
       break;
-    case 'startchel':
-      ctx.reply('еще не сделано');
+    case 'startchel': {
+      const currChal = await getCurrentChallenge(chatId!);
+      if (currChal && !currChal.hasStarted) {
+        await challenge.startChallenge(currChal);
+        ctx.reply('ну че народ ра погнали на');
+      } else {
+        ctx.reply('ты че тут жмешь куалегла, уже идет челлендж, идет');
+      }
+    }
   }
 });
 

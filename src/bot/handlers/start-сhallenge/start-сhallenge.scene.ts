@@ -2,7 +2,7 @@ import { Scenes } from 'telegraf';
 import { previewChalObj } from '../../../types';
 import { getCurrentChallenge } from '../../../db/challenge_crud';
 import challenge from '../../helpers/challenge';
-import renderMsgs from '../../helpers/renderMsgs';
+import renderMsgs from '../../helpers/render-msgs';
 import { backAndExitKeyboard, exitKey, timeRangeKeyboard } from '../../keyboards';
 
 const { BaseScene } = Scenes;
@@ -11,12 +11,13 @@ const { BaseScene } = Scenes;
 //
 const challengeNameScene = new BaseScene<Scenes.SceneContext>('challengeNameScene');
 
-challengeNameScene.enter((ctx) => {
+challengeNameScene.enter(async (ctx) => {
   const chatId = ctx.chat?.id;
-  const currentChal = getCurrentChallenge(chatId!);
+  const currentChal = await getCurrentChallenge(chatId!);
+  console.log(currentChal, 'nameScene currenCHal');
   if (currentChal) {
     ctx.scene.leave();
-    return ctx.reply('А у тебя уже есть один незаконченный челлендж, ебош\n /challenge_state');
+    return ctx.reply('А у тебя уже есть один незаконченный челлендж, ебош\n  комманду challenge_state');
   }
   ctx.reply('Отправьте мне название челленджа', exitKey);
 });
@@ -58,12 +59,18 @@ const selectTimeScene = new BaseScene<Scenes.SceneContext>('selectTimeScene');
 selectTimeScene.enter((ctx) => ctx.reply('Выберите временной диапозон в течении которого будет длиться челлендж', timeRangeKeyboard));
 
 selectTimeScene.action(['1week', '2weeks', '4weeks'], (ctx: Scenes.SceneContext) => {
+  const dictionary = {
+    '1week': '7',
+    '2weeks': '14',
+    '4weeks': '28',
+  } as { [key: string]: string };
+
   const { state } = ctx.scene;
   // @ts-ignore
   const chalObj: previewChalObj = {
     ...state,
     // @ts-ignore
-    durationOfChallenge: ctx.callbackQuery.data,
+    durationOfChallenge: dictionary[ctx.callbackQuery.data],
   };
 
   const previewString = renderMsgs.previewChal(chalObj);

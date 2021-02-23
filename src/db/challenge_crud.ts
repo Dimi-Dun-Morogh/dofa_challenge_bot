@@ -1,5 +1,5 @@
 import logger from '../helpers/logger';
-import challengeModel from '../models/challengeModel';
+import challengeModel from '../models/challenge-model';
 import { INewChallenge } from '../types';
 
 const NAMESPACE = 'db/challenge_crud.ts';
