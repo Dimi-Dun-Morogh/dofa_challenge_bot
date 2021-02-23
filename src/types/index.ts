@@ -4,6 +4,7 @@ interface previewChalObj {
   nameOfChallenge: string,
   conditions: string,
   durationOfChallenge: string,
+  chat_id: number
 }
 
 type ID = string | number;
@@ -25,6 +26,7 @@ interface INewChallenge extends previewChalObj{
   dateOfStart: number
   dateOfEnd: number
   isCompleted: boolean
+  hasStarted: boolean
   chat_id: number
   reports?: Array<report>
   participants?: Array<participant>

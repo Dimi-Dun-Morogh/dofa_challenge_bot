@@ -33,6 +33,9 @@ const challengeSchema = new mongoose.Schema({
   isCompleted: {
     type: Boolean,
   },
+  hasStarted: {
+    type: Boolean,
+  },
   chat_id: {
     type: Number,
   },

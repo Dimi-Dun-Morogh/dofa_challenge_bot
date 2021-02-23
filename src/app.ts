@@ -20,14 +20,14 @@ const testObj = {
   dateOfStart: 1444,
   dateOfEnd: 144444,
   isCompleted: false,
-  chat_id: 1488,
+  chat_id: -1001291813109,
   // reports?: Array<report>
   // participants?: Array<participant>
 };
 
 // createChallengeDb(testObj);
 
-getCurrentChallenge(1488);
+// getCurrentChallenge(1488);
 
 // updateCurrentChallenge(1488, { dateOfStart: 5555 });
 

@@ -1,15 +1,25 @@
 import { Scenes } from 'telegraf';
 import { previewChalObj } from '../../../types';
+import { getCurrentChallenge } from '../../../db/challenge_crud';
+import challenge from '../../helpers/challenge';
 import renderMsgs from '../../helpers/renderMsgs';
 import { backAndExitKeyboard, exitKey, timeRangeKeyboard } from '../../keyboards';
 
-const { BaseScene, Stage } = Scenes;
+const { BaseScene } = Scenes;
 
 // name of challenge
 //
 const challengeNameScene = new BaseScene<Scenes.SceneContext>('challengeNameScene');
 
-challengeNameScene.enter((ctx) => ctx.reply('Отправьте мне название челленджа', exitKey));
+challengeNameScene.enter((ctx) => {
+  const chatId = ctx.chat?.id;
+  const currentChal = getCurrentChallenge(chatId!);
+  if (currentChal) {
+    ctx.scene.leave();
+    return ctx.reply('А у тебя уже есть один незаконченный челлендж, ебош\n /challenge_state');
+  }
+  ctx.reply('Отправьте мне название челленджа', exitKey);
+});
 
 challengeNameScene.on('text', (ctx) => {
   ctx.reply('название принято');
@@ -28,10 +38,11 @@ describeChalScene.enter((ctx) => ctx.reply('Опишите условия чел
 
 describeChalScene.on('text', (ctx) => {
   ctx.reply('условия приняты');
-  console.log(ctx.scene.state, 'state');
+  const chatId = ctx.message?.chat!.id;
+
   const { state } = ctx.scene;
-  const chal = { ...state, conditions: ctx.message.text };
-  console.log(chal);
+  const chal = { ...state, conditions: ctx.message.text, chat_id: chatId };
+  console.log(chal, state);
   return ctx.scene.enter('selectTimeScene', chal);
 });
 
@@ -46,20 +57,22 @@ const selectTimeScene = new BaseScene<Scenes.SceneContext>('selectTimeScene');
 
 selectTimeScene.enter((ctx) => ctx.reply('Выберите временной диапозон в течении которого будет длиться челлендж', timeRangeKeyboard));
 
-selectTimeScene.action(['1week', '2weeks', '4weeks'], (ctx) => {
+selectTimeScene.action(['1week', '2weeks', '4weeks'], (ctx: Scenes.SceneContext) => {
   const { state } = ctx.scene;
   // @ts-ignore
-  const chalObj: previewChalObj = { ...state, durationOfChallenge: ctx.callbackQuery.data };
+  const chalObj: previewChalObj = {
+    ...state,
+    // @ts-ignore
+    durationOfChallenge: ctx.callbackQuery.data,
+  };
 
   const previewString = renderMsgs.previewChal(chalObj);
-  console.log('here', previewString);
 
   ctx.reply(previewString);
+  challenge.createChallenge(chalObj);
 });
 
-const stage = new Stage<Scenes.SceneContext>([challengeNameScene, describeChalScene,
-  selectTimeScene]);
-
 export {
-  stage,
+  challengeNameScene, describeChalScene,
+  selectTimeScene,
 };
