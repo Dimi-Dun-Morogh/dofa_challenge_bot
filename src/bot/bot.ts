@@ -8,7 +8,10 @@ import {
   newConditionsScene, deleteChalScene,
 } from './handlers/control-сhallenge/control-сhallenge.scene';
 import { joinChallengeHandler } from './handlers/join-challenge';
+import { handleReport } from './handlers/process-report';
+
 import { challengeNameScene, describeChalScene, selectTimeScene } from './handlers/start-сhallenge/start-сhallenge.scene';
+import { isAdmin } from './middlewares';
 
 const { Stage } = Scenes;
 const stage = new Stage<Scenes.SceneContext>([
@@ -26,16 +29,29 @@ bot.use(session());
 
 bot.use(stage.middleware());
 
-bot.command('/challenge_state', (ctx) => ctx.scene.enter('controlMainScene'));
+bot.command('/challenge_state', async (ctx) => {
+  const admin = await isAdmin(ctx);
+  if (!admin) return ctx.reply('куда лезешь, это для админов');
+  ctx.scene.enter('controlMainScene');
+});
 
-bot.command('/challenge_create', (ctx) => ctx.scene.enter('challengeNameScene'));
+bot.command('/challenge_create', async (ctx) => {
+  const admin = await isAdmin(ctx);
+  if (!admin) return ctx.reply('куда лезешь, это для админов');
+  ctx.scene.enter('challengeNameScene');
+});
 
 bot.command('/join', (ctx) => joinChallengeHandler(ctx));
 
-bot.on('message', async (ctx) => {
-  // const admins = await ctx.getChatAdministrators();
-  // console.log(admins);
-  console.log(ctx.message);
+// bot.on('text', (ctx) => {
+//   console.log(ctx.message);
+//   console.log(ctx.message.text);
+// });
+
+bot.on('message', (ctx) => {
+  handleReport(ctx);
 });
+
+// bot.hears(['#отчёт', '#отчет'], (ctx) => ctx.reply('[fq'));
 
 export default bot;

@@ -1,6 +1,8 @@
 import { createChallengeDb } from '../../../db/challenge_crud';
 import logger from '../../../helpers/logger';
-import { previewChalObj, participant, IChallenge } from '../../../types';
+import {
+  previewChalObj, participant, IChallenge, Ireport,
+} from '../../../types';
 
 const NAMESPACE = 'bot/helpers/challenge';
 
@@ -53,6 +55,26 @@ const challenge = {
         hasStarted: true,
       });
       logger.info(NAMESPACE, 'start challenge succes', challengeDoc);
+    } catch (error) {
+      logger.error(NAMESPACE, error.message, error);
+    }
+  },
+  async addReport(challengeDoc: IChallenge, report: Ireport) {
+    try {
+      const today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      const todayEnd = new Date();
+      todayEnd.setHours(23);
+      todayEnd.setMinutes(0);
+      if (report.date > Number(todayEnd)) return 'опоздал  глэк, отчеты до 23:00';
+      const isThereReport = challengeDoc.reports?.some(({ date, user_id }) => date > Number(today) && user_id === report.user_id);
+
+      if (!isThereReport) {
+        challengeDoc.reports?.push(report);
+        await challengeDoc.save();
+      }
+      return isThereReport ? 'слыш сегодня от тебя уже был отчет' : 'отчет принят';
     } catch (error) {
       logger.error(NAMESPACE, error.message, error);
     }

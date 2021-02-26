@@ -1,4 +1,4 @@
-// import { TelegrafContext } from 'telegraf/typings/context';
+import { Context } from 'telegraf';
 import logger from '../../helpers/logger';
 
 const NAMESPACE = 'BOT-MIDDLEWARE';
@@ -27,6 +27,21 @@ const isReport = () => (ctx: any, next:any) => {
   }
 };
 
+const isAdmin = async (ctx: Context) => {
+  try {
+    const userId = ctx.message?.from.id;
+    const admins = await ctx.getChatAdministrators();
+    const Admin = admins.some((user) => user.user.id === userId);
+    console.log(ctx);
+
+    logger.info(NAMESPACE, `${userId} is admin - ${Admin}`);
+    return Admin;
+  } catch (error) {
+    logger.error(NAMESPACE, 'error isAdmin', error);
+  }
+};
+
 export {
   isReport,
+  isAdmin,
 };

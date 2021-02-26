@@ -12,7 +12,7 @@ const renderMsgs = {
   controlChal(chalObj: INewChallenge):string {
     const {
       conditions, nameOfChallenge, durationOfChallenge,
-      dateOfEnd, dateOfStart, hasStarted, isCompleted, participants,
+      dateOfEnd, dateOfStart, hasStarted, participants,
     } = chalObj;
     let participantsStr = '';
     if (participants?.length) {

@@ -5,8 +5,7 @@ const reportSchema = new mongoose.Schema({
   date: Number,
   username: String,
   message_id: Number,
-  message: Number,
-  challenge_id: Number,
+  user_id: Number,
 });
 
 const participantSchema = new mongoose.Schema({

@@ -14,12 +14,11 @@ interface participant {
   username: string
 }
 
-interface report {
+interface Ireport {
   date: number
-  username: string
+  username: string | undefined
   message_id: number
-  message: number
-  challenge_id: number
+  user_id: number
 }
 
 interface INewChallenge extends previewChalObj{
@@ -28,7 +27,7 @@ interface INewChallenge extends previewChalObj{
   isCompleted: boolean
   hasStarted: boolean
   chat_id: number
-  reports?: Array<report>
+  reports?: Array<Ireport>
   participants?: Array<participant>
 }
 
@@ -37,5 +36,5 @@ interface IChallenge extends INewChallenge, Document {
 
 export {
   previewChalObj, ID, IChallenge, INewChallenge,
-  participant,
+  participant, Ireport,
 };
