@@ -1,4 +1,6 @@
-import { INewChallenge, previewChalObj } from '../../../types';
+import {
+  dailyStatObj, IendObj, INewChallenge, previewChalObj,
+} from '../../../types';
 import emojis from './emojis';
 
 const renderMsgs = {
@@ -27,6 +29,23 @@ const renderMsgs = {
     Челлендж начался?: ${hasStarted ? 'да' : 'нет'}
     Участники: [${participantsStr}]
     `;
+  },
+  dailyMsg(stats: dailyStatObj) {
+    const statStr = Object.entries(stats).reduce((acc, [key, value]) => acc += `${key} : ${value ? emojis.green_ok : emojis.red_cross}\n`, '');
+    return `Отчет по челленджу за сегодня ${new Date().toLocaleString()}
+${statStr}
+    `;
+  },
+  finalMsg(chalObj: INewChallenge, stats: IendObj) {
+    const statsRendered = Object.entries(stats).reduce((acc, [day, stat]) => {
+      let res = acc;
+      const userStat = Object.entries(stat!).reduce((acc, [userName, bool]) => acc += `${userName} - ${bool ? emojis.green_ok : emojis.red_cross},  `, '');
+
+      res += `${day.split(',')[0]} [ ${userStat} ]\n`;
+      return res;
+    }, '');
+    return `Челлендж ${chalObj.nameOfChallenge} окончен.
+${statsRendered}`;
   },
 };
 

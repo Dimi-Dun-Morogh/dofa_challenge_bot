@@ -8,6 +8,8 @@ const emojis = {
   boom: '\ud83d\udca5',
   pin2: '\ud83e\uddf7',
   green_snowflake: '\u2733\ufe0f',
+  red_cross: '\u274c',
+  green_ok: '\u2705',
 };
 
 export default emojis;

@@ -1,5 +1,6 @@
 import bot from './bot/bot';
-import challenge from './bot/helpers/challenge';
+
+import { cronDailyStat, cronIsChallengeDone } from './cron-tasks/challenge-cron';
 
 import { connectDb } from './db/db_connect';
 import logger from './helpers/logger';
@@ -11,3 +12,7 @@ bot.launch()
   .catch((error: Error) => logger.error(NAMESPACE, error.message, error));
 
 connectDb().then(() => logger.info(NAMESPACE, 'connect to DB success'));
+
+cronDailyStat.start();
+
+cronIsChallengeDone.start();

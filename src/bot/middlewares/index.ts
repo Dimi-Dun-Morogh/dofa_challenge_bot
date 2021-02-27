@@ -32,7 +32,6 @@ const isAdmin = async (ctx: Context) => {
     const userId = ctx.message?.from.id;
     const admins = await ctx.getChatAdministrators();
     const Admin = admins.some((user) => user.user.id === userId);
-    console.log(ctx);
 
     logger.info(NAMESPACE, `${userId} is admin - ${Admin}`);
     return Admin;
@@ -41,7 +40,17 @@ const isAdmin = async (ctx: Context) => {
   }
 };
 
+const isPrivateChat = () => async (ctx: Context, next: any) => {
+  try {
+    if (ctx.chat?.type === 'private') return await ctx.reply('сорян браток, бот работает в групповых чатах, а не соло диалоге');
+    return next();
+  } catch (error) {
+    logger.error(NAMESPACE, error.message, error);
+  }
+};
+
 export {
   isReport,
   isAdmin,
+  isPrivateChat,
 };

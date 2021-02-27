@@ -1,11 +1,12 @@
 import { Scenes } from 'telegraf';
 import { getCurrentChallenge, updateCurrentChallenge, deleteCurrentChallenge } from '../../../db/challenge_crud';
+import logger from '../../../helpers/logger';
 import challenge from '../../helpers/challenge';
 import renderMsgs from '../../helpers/render-msgs';
 import { controlChalKeyboard, exitKey, noAndYesKeyboard } from '../../keyboards';
 
 const { BaseScene } = Scenes;
-
+const NAMESPACE = 'control-challenge.scene.ts';
 const controlMainScene = new BaseScene<Scenes.SceneContext>('controlMainScene');
 
 controlMainScene.enter(async (ctx) => {
@@ -97,7 +98,7 @@ deleteChalScene.action(['exit', 'yes'], async (ctx: Scenes.SceneContext) => {
   if (command === 'yes') {
     const chatId = ctx.chat?.id;
     const res = await deleteCurrentChallenge(chatId!);
-    console.log(res, 'delete', ctx.chat?.id);
+    logger.info(NAMESPACE, `delete challenge for chat ${ctx.chat?.id}`, res);
     ctx.reply('удаление завершено, другалёк');
     ctx.scene.leave();
   } else {

@@ -46,9 +46,19 @@ const deleteCurrentChallenge = async (chatId: number) => {
   }
 };
 
+const getAllCurrentChallenges = async () => {
+  try {
+    const challenges = await challengeModel.find({ isCompleted: false, hasStarted: true });
+    return challenges;
+  } catch (error) {
+    logger.error(NAMESPACE, error.message, error);
+  }
+};
+
 export {
   createChallengeDb,
   getCurrentChallenge,
   updateCurrentChallenge,
   deleteCurrentChallenge,
+  getAllCurrentChallenges,
 };

@@ -17,6 +17,8 @@ const joinChallengeHandler = async (ctx: Context) => {
 
     await challenge.joinChallenge({ id, username: `@${username}` }, currentChallenge);
     ctx.reply('ок теперь ты в челлендже', { reply_to_message_id: message_id });
+  } else {
+    ctx.reply('ща поход челенджа нет', { reply_to_message_id: message_id });
   }
 };
 

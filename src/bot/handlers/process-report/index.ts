@@ -16,7 +16,8 @@ const handleReport = async (ctx: Context) => {
       user_id: ctx.from?.id!,
     };
 
-    if (!isChallenge) return ctx.reply('слыш челленджа нет', { reply_to_message_id: message_id });
+    if (!isChallenge || !isChallenge.hasStarted) return ctx.reply('слыш челленджа нет или одмен его не стартанул', { reply_to_message_id: message_id });
+    if (!isChallenge.participants.some((user) => user.id === ctx.from?.id!)) return ctx.reply('слыш ты вобще не в челлендже', { reply_to_message_id: message_id });
     const res = await challenge.addReport(isChallenge, reportObj);
 
     return ctx.reply(res!, { reply_to_message_id: message_id });

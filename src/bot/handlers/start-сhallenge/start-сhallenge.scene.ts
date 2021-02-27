@@ -4,9 +4,10 @@ import { getCurrentChallenge } from '../../../db/challenge_crud';
 import challenge from '../../helpers/challenge';
 import renderMsgs from '../../helpers/render-msgs';
 import { backAndExitKeyboard, exitKey, timeRangeKeyboard } from '../../keyboards';
+import logger from '../../../helpers/logger';
 
 const { BaseScene } = Scenes;
-
+const NAMESPACE = 'start-challenge.scene.ts';
 // name of challenge
 //
 const challengeNameScene = new BaseScene<Scenes.SceneContext>('challengeNameScene');
@@ -14,7 +15,8 @@ const challengeNameScene = new BaseScene<Scenes.SceneContext>('challengeNameScen
 challengeNameScene.enter(async (ctx) => {
   const chatId = ctx.chat?.id;
   const currentChal = await getCurrentChallenge(chatId!);
-  console.log(currentChal, 'nameScene currenCHal');
+
+  logger.info(NAMESPACE, 'nameScene currenCHal', currentChal);
   if (currentChal) {
     ctx.scene.leave();
     return ctx.reply('А у тебя уже есть один незаконченный челлендж, ебош\n  комманду challenge_state');
@@ -29,7 +31,7 @@ challengeNameScene.on('text', (ctx) => {
 
 challengeNameScene.action('exit', (ctx) => ctx.scene.leave());
 
-// challengeNameScene.leave((ctx) => ctx.reply('выход из сцены названия'));
+challengeNameScene.leave((ctx) => ctx.reply('выход из сцены названия'));
 
 // describe challenge scene
 //
@@ -43,7 +45,7 @@ describeChalScene.on('text', (ctx) => {
 
   const { state } = ctx.scene;
   const chal = { ...state, conditions: ctx.message.text, chat_id: chatId };
-  console.log(chal, state);
+
   return ctx.scene.enter('selectTimeScene', chal);
 });
 

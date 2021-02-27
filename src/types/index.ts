@@ -14,6 +14,10 @@ interface participant {
   username: string
 }
 
+type dailyStatObj = {
+  [key:string]: boolean
+};
+
 interface Ireport {
   date: number
   username: string | undefined
@@ -28,13 +32,17 @@ interface INewChallenge extends previewChalObj{
   hasStarted: boolean
   chat_id: number
   reports?: Array<Ireport>
-  participants?: Array<participant>
+  participants: Array<participant>
 }
 
 interface IChallenge extends INewChallenge, Document {
 }
 
+interface IendObj {
+  [key:string]: undefined | { [key:string]: boolean| undefined }
+}
+
 export {
   previewChalObj, ID, IChallenge, INewChallenge,
-  participant, Ireport,
+  participant, Ireport, dailyStatObj, IendObj,
 };

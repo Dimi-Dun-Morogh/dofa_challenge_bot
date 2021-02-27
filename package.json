@@ -7,10 +7,10 @@
     "build": "rm -rf build/ && prettier --write src/ && tsc",
     "dev": "npx nodemon ./src/app.ts",
     "start": "node ./build/app.js",
-    "lint": "eslint ./src",
+    "lint": "npx eslint ./src  --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint ./src --fix"
   },
-  "keywords": [],
+  "keywords": ["telegram-bot", "challenge-bot"],
   "author": "",
   "license": "ISC",
   "dependencies": {

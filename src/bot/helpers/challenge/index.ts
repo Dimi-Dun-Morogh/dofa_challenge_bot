@@ -1,8 +1,9 @@
 import { createChallengeDb } from '../../../db/challenge_crud';
 import logger from '../../../helpers/logger';
 import {
-  previewChalObj, participant, IChallenge, Ireport,
+  previewChalObj, dailyStatObj, participant, IChallenge, Ireport, IendObj,
 } from '../../../types';
+import renderMsgs from '../render-msgs';
 
 const NAMESPACE = 'bot/helpers/challenge';
 
@@ -14,6 +15,7 @@ const challenge = {
       dateOfEnd: 1488,
       isCompleted: false,
       hasStarted: false,
+      participants: [],
     };
     await createChallengeDb(newChallenge);
     logger.info(NAMESPACE, 'new challenge created', newChallenge);
@@ -68,7 +70,8 @@ const challenge = {
       todayEnd.setHours(23);
       todayEnd.setMinutes(0);
       if (report.date > Number(todayEnd)) return 'опоздал  глэк, отчеты до 23:00';
-      const isThereReport = challengeDoc.reports?.some(({ date, user_id }) => date > Number(today) && user_id === report.user_id);
+      const isThereReport = challengeDoc.reports?.some(({ date, user_id }) => date > Number(today)
+       && user_id === report.user_id);
 
       if (!isThereReport) {
         challengeDoc.reports?.push(report);
@@ -79,6 +82,59 @@ const challenge = {
       logger.error(NAMESPACE, error.message, error);
     }
   },
+
+  dailyStat(challengeDoc: IChallenge) {
+    const stat: dailyStatObj = challengeDoc.participants.reduce((acc, participantObj) => {
+      const status = challengeDoc.reports?.some((report) => report.user_id === participantObj.id);
+      const res = { ...acc };
+      res[participantObj.username] = status;
+      return res;
+    }, {} as any);
+    return stat;
+  },
+
+  endStats(challengeDoc: IChallenge) {
+    const { reports, participants } = challengeDoc;
+    const endObj = reports?.reduce((acc, repObj) => {
+      const { date } = repObj;
+      const res = acc;
+      const key = new Date(date);
+      key.setHours(0);
+      key.setMinutes(0);
+      key.setSeconds(0);
+      res[key.toLocaleString()] = undefined;
+      return res;
+    }, {} as any);
+
+    Object.keys(endObj).forEach((key) => {
+      const names = participants.reduce((acc, user) => {
+        const res = acc;
+        res[user.username] = undefined;
+        return res;
+      }, {} as { [key:string]:undefined });
+      endObj[key] = names;
+    });
+
+    reports?.forEach((report) => {
+      const { username, date } = report;
+      const key = new Date(date);
+      key.setHours(0);
+      key.setMinutes(0);
+      key.setSeconds(0);
+      endObj[key.toLocaleString()][`@${username!}`] = true;
+    });
+    return endObj as IendObj;
+  },
+
+  endChallenge(challengeDoc: IChallenge) {
+    const { dateOfEnd } = challengeDoc;
+    const today = Number(new Date());
+    if (dateOfEnd > today) return false;
+    const stats = this.endStats(challengeDoc);
+    const message = renderMsgs.finalMsg(challengeDoc, stats);
+    return message;
+  },
+
 };
 
 export default challenge;
