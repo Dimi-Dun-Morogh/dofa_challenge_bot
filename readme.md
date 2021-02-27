@@ -6,17 +6,17 @@
 /join -  присоединиться к челленджу <br>
 
 #### создание заготовки под челлендж
-![Alt text](images/challengeCreate1.jpg?raw=true "challengeCreate")
-![Alt text](images/challengeCreate2.jpg?raw=true "challengeCreate2")
+![Alt text](images/challengeCreate1.JPG?raw=true "challengeCreate")
+![Alt text](images/challengeCreate2.JPG?raw=true "challengeCreate2")
 #### управление состоянием челленджа
-![Alt text](images/challengeState.jpg?raw=true "challengeState")
+![Alt text](images/challengeState.JPG?raw=true "challengeState")
 #### присоединиться к челленджу
-![Alt text](images/joinChallenge.jpg?raw=true "challengeEnd")
-![Alt text](images/joinChallenge2.jpg?raw=true "challengeEnd")
+![Alt text](images/joinChallenge.JPG?raw=true "challengeEnd")
+![Alt text](images/joinChallenge2.JPG?raw=true "challengeEnd")
 #### отчет за день
-![Alt text](images/reportToday.jpg?raw=true "reportToday")
+![Alt text](images/reportToday.JPG?raw=true "reportToday")
 #### конец челленджа отчет
-![Alt text](images/challengeEnd.jpg?raw=true "challengeEnd")
+![Alt text](images/challengeEnd.JPG?raw=true "challengeEnd")
 
 #### todo:
 
