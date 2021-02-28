@@ -102,7 +102,7 @@ const challenge = {
       key.setHours(0);
       key.setMinutes(0);
       key.setSeconds(0);
-      res[key.toLocaleString()] = undefined;
+      res[key.toLocaleString('en-GB', { hour12: false })] = undefined;
       return res;
     }, {} as any);
 
@@ -121,7 +121,7 @@ const challenge = {
       key.setHours(0);
       key.setMinutes(0);
       key.setSeconds(0);
-      endObj[key.toLocaleString()][`@${username!}`] = true;
+      endObj[key.toLocaleString('en-GB', { hour12: false })][`@${username!}`] = true;
     });
     return endObj as IendObj;
   },

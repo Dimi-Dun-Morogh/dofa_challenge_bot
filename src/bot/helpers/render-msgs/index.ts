@@ -24,15 +24,15 @@ const renderMsgs = {
     название: ${nameOfChallenge}
     условия: ${conditions}
     длительность: ${durationOfChallenge} дней
-    дата начала: ${new Date(dateOfStart).toLocaleString()}
-    дата конца: ${new Date(dateOfEnd).toLocaleString()}
+    дата начала: ${new Date(dateOfStart).toLocaleString('en-GB', { hour12: false })}
+    дата конца: ${new Date(dateOfEnd).toLocaleString('en-GB', { hour12: false })}
     Челлендж начался?: ${hasStarted ? 'да' : 'нет'}
     Участники: [${participantsStr}]
     `;
   },
   dailyMsg(stats: dailyStatObj) {
     const statStr = Object.entries(stats).reduce((acc, [key, value]) => acc += `${key} : ${value ? emojis.green_ok : emojis.red_cross}\n`, '');
-    return `Отчет по челленджу за сегодня ${new Date().toLocaleString()}
+    return `Отчет по челленджу за сегодня ${new Date().toLocaleString('en-GB', { hour12: false })}
 ${statStr}
     `;
   },
