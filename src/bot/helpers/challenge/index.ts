@@ -85,7 +85,12 @@ const challenge = {
 
   dailyStat(challengeDoc: IChallenge) {
     const stat: dailyStatObj = challengeDoc.participants.reduce((acc, participantObj) => {
-      const status = challengeDoc.reports?.some((report) => report.user_id === participantObj.id);
+      const today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+
+      const status = challengeDoc.reports?.filter((report) => report.date > Number(today))
+        .some((report) => report.user_id === participantObj.id);
       const res = { ...acc };
       res[participantObj.username] = status;
       return res;
