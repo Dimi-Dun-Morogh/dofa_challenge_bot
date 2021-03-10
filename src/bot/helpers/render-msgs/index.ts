@@ -36,7 +36,7 @@ const renderMsgs = {
 ${statStr}
     `;
   },
-  finalMsg(chalObj: INewChallenge, stats: IendObj) {
+  finalMsg(chalObj: INewChallenge, stats: IendObj, isNotEnd?: boolean | undefined) {
     const statsRendered = Object.entries(stats).reduce((acc, [day, stat]) => {
       let res = acc;
       const userStat = Object.entries(stat!).reduce((acc, [userName, bool]) => acc += `${userName} - ${bool ? emojis.green_ok : emojis.red_cross},  `, '');
@@ -44,7 +44,7 @@ ${statStr}
       res += `${day.split(',')[0]} [ ${userStat} ]\n`;
       return res;
     }, '');
-    return `Челлендж ${chalObj.nameOfChallenge} окончен.
+    return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.
 ${statsRendered}`;
   },
 };

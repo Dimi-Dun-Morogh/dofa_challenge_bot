@@ -128,18 +128,28 @@ const challenge = {
       key.setSeconds(0);
       endObj[key.toLocaleString('en-GB', { hour12: false })][`@${username!}`] = true;
     });
+
     return endObj as IendObj;
   },
 
-  endChallenge(challengeDoc: IChallenge) {
+  endChallenge(challengeDoc: IChallenge, isNotEnd?: boolean| undefined) {
     const { dateOfEnd } = challengeDoc;
     const today = Number(new Date());
-    if (dateOfEnd > today) return false;
+    if (dateOfEnd > today && !isNotEnd) return false;
     const stats = this.endStats(challengeDoc);
-    const message = renderMsgs.finalMsg(challengeDoc, stats);
+    const message = renderMsgs.finalMsg(challengeDoc, stats, isNotEnd);
     return message;
   },
 
+  userStats(challengeDoc: IChallenge, userName: string) {
+    const stats = this.endStats(challengeDoc);
+    Object.entries(stats).forEach(([day, userStats]) => {
+      const filtered = Object.entries(userStats!).filter(([user]) => user === userName);
+      stats[day] = Object.fromEntries(filtered);
+    });
+    const message = renderMsgs.finalMsg(challengeDoc, stats, true);
+    return message;
+  },
 };
 
 export default challenge;
