@@ -21,14 +21,15 @@ const cronDailyStat = cron
       logger.error(NAMESPACE, error.message, error);
     }
   }).stop();
-
+// '0 10 23 * * *'
 const cronIsChallengeDone = cron.schedule('0 10 23 * * *', async () => {
   try {
     const allChallenges = await getAllCurrentChallenges();
     allChallenges?.forEach((chal) => {
       const msg = challenge.endChallenge(chal);
       if (msg) {
-        bot.telegram.sendMessage(chal.chat_id, msg);
+        renderMsgs.messageSplitter(msg)
+          .forEach((text) => bot.telegram.sendMessage(chal.chat_id, text));
         chal.isCompleted = true;
         chal.save();
       }

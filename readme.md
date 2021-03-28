@@ -18,6 +18,8 @@
 #### конец челленджа отчет
 ![Alt text](images/challengeEnd.JPG?raw=true "challengeEnd")
 
+#### предварительные результаты отчет /my_stats
+![Alt text](images/challengePreviRes.JPG?raw=true "challengePreviRes")
 #### todo:
 
 - [x] сделать нового бота, настроить взаимодействие со скриптом, создать и подключиться к бд (20.02.2021) ✅

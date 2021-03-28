@@ -47,6 +47,22 @@ ${statStr}
     return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.
 ${statsRendered}`;
   },
+  messageSplitter(messageString: string) {
+    const max_size = 4096;
+
+    const amount_sliced = messageString.length / max_size;
+    let start = 0;
+    let end = max_size;
+    let message;
+    const messages:Array<string> = [];
+    for (let i = 0; i < amount_sliced; i++) {
+      message = messageString.slice(start, end);
+      messages.push(message);
+      start += max_size;
+      end += max_size;
+    }
+    return messages;
+  },
 };
 
 export default renderMsgs;

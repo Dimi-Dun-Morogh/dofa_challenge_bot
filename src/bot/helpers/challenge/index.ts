@@ -48,7 +48,7 @@ const challenge = {
 
       endChallenge.setHours(23);
       endChallenge.setMinutes(0);
-      endChallenge.setDate(today.getDate() + +durationOfChallenge);
+      endChallenge.setDate(today.getDate() + +durationOfChallenge - 1);
 
       await challengeDoc.update({
         dateOfStart: Number(today),
