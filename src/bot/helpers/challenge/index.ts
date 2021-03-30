@@ -1,7 +1,7 @@
 import { createChallengeDb } from '../../../db/challenge_crud';
 import logger from '../../../helpers/logger';
 import {
-  previewChalObj, dailyStatObj, participant, IChallenge, Ireport, IendObj,
+  previewChalObj, dailyStatObj, participant, IChallenge, Ireport, IendObj, IFinalObj,
 } from '../../../types';
 import renderMsgs from '../render-msgs';
 
@@ -100,7 +100,7 @@ const challenge = {
 
   endStats(challengeDoc: IChallenge) {
     const { reports, participants } = challengeDoc;
-    const endObj = reports?.reduce((acc, repObj) => {
+    const endObj : IendObj = reports?.reduce((acc, repObj) => {
       const { date } = repObj;
       const res = acc;
       const key = new Date(date);
@@ -111,25 +111,31 @@ const challenge = {
       return res;
     }, {} as any);
 
-    Object.keys(endObj).forEach((key) => {
-      const names = participants.reduce((acc, user) => {
-        const res = acc;
-        res[user.username] = undefined;
-        return res;
-      }, {} as { [key:string]:undefined });
-      endObj[key] = names;
-    });
+    const names = participants.reduce((acc, user) => {
+      const res = acc;
+      res[user.username] = undefined;
+      return res;
+    }, {} as { [key:string]:undefined });
 
+    Object.keys(endObj).forEach((key) => {
+      endObj[key] = { ...names };
+    });
     reports?.forEach((report) => {
       const { username, date } = report;
       const key = new Date(date);
       key.setHours(0);
       key.setMinutes(0);
       key.setSeconds(0);
-      endObj[key.toLocaleString('en-GB', { hour12: false })][`@${username!}`] = true;
+      endObj[key.toLocaleString('en-GB', { hour12: false })]![`@${username!}`] = true;
     });
 
-    return endObj as IendObj;
+    const final = Object.keys(names).reduce((acc, name) => {
+      const res = acc;
+      res[name] = [];
+      Object.entries(endObj).forEach(([, resObj]: [any, any]) => res[name].push(resObj[name]));
+      return res;
+    }, {} as IFinalObj);
+    return final;
   },
 
   endChallenge(challengeDoc: IChallenge, isNotEnd?: boolean| undefined) {
@@ -143,11 +149,7 @@ const challenge = {
 
   userStats(challengeDoc: IChallenge, userName: string) {
     const stats = this.endStats(challengeDoc);
-    Object.entries(stats).forEach(([day, userStats]) => {
-      const filtered = Object.entries(userStats!).filter(([user]) => user === userName);
-      stats[day] = Object.fromEntries(filtered);
-    });
-    const message = renderMsgs.finalMsg(challengeDoc, stats, true);
+    const message = renderMsgs.finalMsg(challengeDoc, { [userName]: stats[userName] }, true);
     return message;
   },
 };

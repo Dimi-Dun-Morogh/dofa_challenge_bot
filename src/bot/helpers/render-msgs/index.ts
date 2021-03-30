@@ -1,5 +1,5 @@
 import {
-  dailyStatObj, IendObj, INewChallenge, previewChalObj,
+  dailyStatObj, IFinalObj, INewChallenge, previewChalObj,
 } from '../../../types';
 import emojis from './emojis';
 
@@ -36,12 +36,11 @@ const renderMsgs = {
 ${statStr}
     `;
   },
-  finalMsg(chalObj: INewChallenge, stats: IendObj, isNotEnd?: boolean | undefined) {
-    const statsRendered = Object.entries(stats).reduce((acc, [day, stat]) => {
+  finalMsg(chalObj: INewChallenge, stats: IFinalObj, isNotEnd?: boolean | undefined) {
+    const statsRendered = Object.entries(stats).reduce((acc, [name, stat]) => {
       let res = acc;
-      const userStat = Object.entries(stat!).reduce((acc, [userName, bool]) => acc += `${userName} - ${bool ? emojis.green_ok : emojis.red_cross},  `, '');
-
-      res += `${day.split(',')[0]} [ ${userStat} ]\n`;
+      const statStr = stat.reduce((accM, dayRes) => accM += `${dayRes ? emojis.green_ok : emojis.red_cross}`, '');
+      res += `${name} : [${statStr}]\n\n`;
       return res;
     }, '');
     return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.

@@ -42,7 +42,11 @@ interface IendObj {
   [key:string]: undefined | { [key:string]: boolean| undefined }
 }
 
+interface IFinalObj {
+  [key:string] : Array<boolean | undefined>
+}
+
 export {
   previewChalObj, ID, IChallenge, INewChallenge,
-  participant, Ireport, dailyStatObj, IendObj,
+  participant, Ireport, dailyStatObj, IendObj, IFinalObj,
 };
