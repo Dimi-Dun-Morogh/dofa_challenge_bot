@@ -36,6 +36,13 @@ const renderMsgs = {
 ${statStr}
     `;
   },
+  layziesDailyMsg(stats: dailyStatObj) {
+    const statStr = Object.entries(stats).reduce((acc, [key, value]) => acc += `${key} : ${value ? emojis.green_ok : emojis.red_cross}\n`, '');
+    return `Сегодня ещё не отметились:
+${statStr}
+после 22:00 отчеты не принимаются!
+    `;
+  },
   finalMsg(chalObj: INewChallenge, stats: IFinalObj, isNotEnd?: boolean | undefined) {
     const statsRendered = Object.entries(stats).reduce((acc, [name, stat]) => {
       let res = acc;
@@ -54,7 +61,7 @@ ${statsRendered}`;
     let end = max_size;
     let message;
     const messages:Array<string> = [];
-    for (let i = 0; i < amount_sliced; i++) {
+    for (let i = 0; i < amount_sliced; i += 1) {
       message = messageString.slice(start, end);
       messages.push(message);
       start += max_size;

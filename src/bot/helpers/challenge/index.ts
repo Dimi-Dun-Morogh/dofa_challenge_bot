@@ -98,6 +98,12 @@ const challenge = {
     return stat;
   },
 
+  dailyLazies(challengeDoc: IChallenge) {
+    const dailyStats = this.dailyStat(challengeDoc);
+    const lazies = Object.entries(dailyStats).filter(([, status]) => status !== true);
+    return Object.fromEntries(lazies);
+  },
+
   endStats(challengeDoc: IChallenge) {
     const { reports, participants } = challengeDoc;
     const endObj : IendObj = reports?.reduce((acc, repObj) => {

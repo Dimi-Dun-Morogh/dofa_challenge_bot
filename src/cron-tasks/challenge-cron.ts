@@ -3,6 +3,7 @@ import logger from '../helpers/logger';
 import { getAllCurrentChallenges } from '../db/challenge_crud';
 import challenge from '../bot/helpers/challenge';
 import renderMsgs from '../bot/helpers/render-msgs';
+import { IChallenge } from '../types/index';
 import bot from '../bot/bot';
 
 const NAMESPACE = 'cron-tasks';
@@ -12,7 +13,7 @@ const cronDailyStat = cron
     try {
       const allChallenges = await getAllCurrentChallenges();
       logger.info(NAMESPACE, 'all Challenges dailyStat', allChallenges);
-      allChallenges?.forEach((challengeObj) => {
+      allChallenges?.forEach((challengeObj: IChallenge) => {
         const stat = challenge.dailyStat(challengeObj);
         const message = renderMsgs.dailyMsg(stat);
         bot.telegram.sendMessage(challengeObj.chat_id, message, { disable_notification: true });
@@ -39,7 +40,21 @@ const cronIsChallengeDone = cron.schedule('0 10 23 * * *', async () => {
   }
 }).stop();
 
+const cronRemindLazies = cron.schedule('0 10 20 * * *', async () => {
+  try {
+    const allChallenges = await getAllCurrentChallenges();
+    allChallenges?.forEach((challengeObj) => {
+      const stat = challenge.dailyLazies(challengeObj);
+      const msgString = renderMsgs.layziesDailyMsg(stat);
+      bot.telegram.sendMessage(challengeObj.chat_id, msgString);
+    });
+  } catch (error) {
+    logger.error(NAMESPACE, 'error in cronRemindLazies()', error);
+  }
+}).stop();
+
 export {
   cronDailyStat,
   cronIsChallengeDone,
+  cronRemindLazies,
 };
