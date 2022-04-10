@@ -23,6 +23,7 @@ interface Ireport {
   username: string | undefined
   message_id: number
   user_id: number
+  reported: boolean
 }
 
 interface INewChallenge extends previewChalObj{

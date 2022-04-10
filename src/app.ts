@@ -1,7 +1,9 @@
 import express, { Request, Response } from 'express';
 import bot from './bot/bot';
 
-import { cronDailyStat, cronIsChallengeDone, cronRemindLazies } from './cron-tasks/challenge-cron';
+import {
+  cronDailyStat, cronIsChallengeDone, cronRemindLazies,
+} from './cron-tasks/challenge-cron';
 import { connectDb } from './db/db_connect';
 import logger from './helpers/logger';
 import wakeUpDyno from './helpers/antiIdle';

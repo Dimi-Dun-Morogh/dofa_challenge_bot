@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "rm -rf build/ && prettier --write src/ && tsc",
-    "dev": "npx nodemon ./src/app.ts",
+    "dev": "npx nodemon --delay 5.5 ./src/app.ts",
     "start": "node ./build/app.js",
     "lint": "npx eslint ./src  --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint ./src --fix"
   },
+
   "keywords": ["telegram-bot", "challenge-bot"],
   "author": "",
   "license": "ISC",

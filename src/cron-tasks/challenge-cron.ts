@@ -3,7 +3,6 @@ import logger from '../helpers/logger';
 import { getAllCurrentChallenges } from '../db/challenge_crud';
 import challenge from '../bot/helpers/challenge';
 import renderMsgs from '../bot/helpers/render-msgs';
-import { IChallenge } from '../types/index';
 import bot from '../bot/bot';
 
 const NAMESPACE = 'cron-tasks';
@@ -13,15 +12,24 @@ const cronDailyStat = cron
     try {
       const allChallenges = await getAllCurrentChallenges();
       logger.info(NAMESPACE, 'all Challenges dailyStat', allChallenges);
-      allChallenges?.forEach((challengeObj: IChallenge) => {
+      if (!allChallenges) return;
+
+      for (let i = 0; i < allChallenges?.length; i += 1) {
+        const challengeObj = allChallenges[i];
         const stat = challenge.dailyStat(challengeObj);
         const message = renderMsgs.dailyMsg(stat);
-        bot.telegram.sendMessage(challengeObj.chat_id, message, { disable_notification: true });
-      });
+
+        // report em to DB false here
+        await challenge.reportLazies(challengeObj);
+
+        await bot.telegram.sendMessage(challengeObj.chat_id, message,
+          { disable_notification: true });
+      }
     } catch (error) {
-      logger.error(NAMESPACE, error.message, error);
+      logger.error(NAMESPACE, error, error);
     }
   }).stop();
+
 // '0 10 23 * * *'
 const cronIsChallengeDone = cron.schedule('0 10 23 * * *', async () => {
   try {
@@ -36,7 +44,7 @@ const cronIsChallengeDone = cron.schedule('0 10 23 * * *', async () => {
       }
     });
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 }).stop();
 

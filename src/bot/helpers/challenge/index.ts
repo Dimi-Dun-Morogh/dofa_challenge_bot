@@ -58,7 +58,7 @@ const challenge = {
       });
       logger.info(NAMESPACE, 'start challenge succes', challengeDoc);
     } catch (error) {
-      logger.error(NAMESPACE, error.message, error);
+      logger.error(NAMESPACE, error, error);
     }
   },
   async addReport(challengeDoc: IChallenge, report: Ireport) {
@@ -78,7 +78,7 @@ const challenge = {
         await challengeDoc.save();
       }
       return isThereReport ? 'слыш сегодня от тебя уже был отчет' : 'отчет принят';
-    } catch (error) {
+    } catch (error:any) {
       logger.error(NAMESPACE, error.message, error);
     }
   },
@@ -90,9 +90,11 @@ const challenge = {
       today.setMinutes(0);
 
       const status = challengeDoc.reports?.filter((report) => report.date > Number(today))
-        .some((report) => report.user_id === participantObj.id);
+        .find(({ user_id }) => user_id === participantObj.id);
+
       const res = { ...acc };
-      res[participantObj.username] = status;
+      res[participantObj.username] = status?.reported;
+
       return res;
     }, {} as any);
     return stat;
@@ -102,6 +104,30 @@ const challenge = {
     const dailyStats = this.dailyStat(challengeDoc);
     const lazies = Object.entries(dailyStats).filter(([, status]) => status !== true);
     return Object.fromEntries(lazies);
+  },
+
+  async reportLazies(challengeObj: IChallenge) {
+    // ? this will make a report with false flag for those who did not report true that day
+    //! report them false here
+    const dalazies = Object.entries(challenge.dailyLazies(challengeObj));
+
+    for (let i = 0; i < dalazies.length; i += 1) {
+      //! достать user id from challenge.participants;
+      const username = dalazies[i][0];
+
+      const userId = challengeObj.participants
+        .find(({ username: usernameRep }) => usernameRep === username);
+
+      const report = {
+        date: Number(new Date()),
+        username,
+        message_id: 0,
+        user_id: userId!.id, //! достать user id from challenge.participants;
+        reported: false,
+      };
+
+      await challenge.addReport(challengeObj, report);
+    }
   },
 
   endStats(challengeDoc: IChallenge) {

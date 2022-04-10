@@ -14,6 +14,7 @@ const handleReport = async (ctx: Context) => {
       username: ctx.message?.from.username,
       message_id,
       user_id: ctx.from?.id!,
+      reported: true,
     };
 
     if (!isChallenge || !isChallenge.hasStarted) return ctx.reply('слыш челленджа нет или одмен его не стартанул', { reply_to_message_id: message_id });

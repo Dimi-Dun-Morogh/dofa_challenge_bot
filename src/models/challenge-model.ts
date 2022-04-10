@@ -6,6 +6,7 @@ const reportSchema = new mongoose.Schema({
   username: String,
   message_id: Number,
   user_id: Number,
+  reported: Boolean,
 });
 
 const participantSchema = new mongoose.Schema({
