@@ -12,6 +12,7 @@ type ID = string | number;
 interface participant {
   id: number
   username: string
+  user_conditions?: string
 }
 
 type dailyStatObj = {

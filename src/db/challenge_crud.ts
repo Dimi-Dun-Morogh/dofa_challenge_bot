@@ -9,7 +9,7 @@ const createChallengeDb = async (challengeObj: INewChallenge) => {
     const res = await challengeModel.create(challengeObj);
     logger.info(NAMESPACE, 'new  challenge created', res);
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 
@@ -19,7 +19,7 @@ const getCurrentChallenge = async (chatId: number) => {
     logger.info(NAMESPACE, 'current Challenge', res);
     return res;
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 
@@ -31,7 +31,7 @@ const updateCurrentChallenge = async (chatId: number, data:any) => {
     }, data, { upsert: true });
     return res;
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 
@@ -42,7 +42,7 @@ const deleteCurrentChallenge = async (chatId: number) => {
     await currentChal.delete();
     return true;
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 
@@ -51,7 +51,7 @@ const getAllCurrentChallenges = async () => {
     const challenges = await challengeModel.find({ isCompleted: false, hasStarted: true });
     return challenges;
   } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 

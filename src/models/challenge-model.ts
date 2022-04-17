@@ -12,6 +12,7 @@ const reportSchema = new mongoose.Schema({
 const participantSchema = new mongoose.Schema({
   id: Number,
   username: String,
+  user_conditions: String,
 });
 
 const challengeSchema = new mongoose.Schema({

@@ -1,9 +1,11 @@
 import {
   dailyStatObj, IFinalObj, INewChallenge, previewChalObj,
 } from '../../../types';
+import challenge from '../challenge';
 import emojis from './emojis';
 
 const renderMsgs = {
+  emojis,
 
   previewChal(prevChalObj: previewChalObj):string {
     const { conditions, nameOfChallenge, durationOfChallenge } = prevChalObj;
@@ -18,7 +20,10 @@ const renderMsgs = {
     } = chalObj;
     let participantsStr = '';
     if (participants?.length) {
-      participants.forEach(({ username }) => participantsStr += `${username}, `);
+      participants.forEach(({ username, user_conditions }) => {
+        const conditionsMsg = user_conditions ? ` - ${user_conditions}` : '';
+        participantsStr += `${this.emojis.green_snowflake}${username}${conditionsMsg}${this.emojis.lightning}, `;
+      });
     }
     return `Текущий челлендж:
     название: ${nameOfChallenge}
@@ -47,7 +52,12 @@ ${statStr}
     const statsRendered = Object.entries(stats).reduce((acc, [name, stat]) => {
       let res = acc;
       const statStr = stat.reduce((accM, dayRes) => accM += `${dayRes ? emojis.green_ok : emojis.red_cross}`, '');
-      res += `${name} : [${statStr}]\n\n`;
+      // зарендерить условия персональные
+      const participant = chalObj.participants
+        .find((user) => user.username === name);
+      const condsMsg = participant?.user_conditions ? ` - ${participant?.user_conditions}` : '';
+
+      res += `${name}${condsMsg} : [${statStr}]\n`;
       return res;
     }, '');
     return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.

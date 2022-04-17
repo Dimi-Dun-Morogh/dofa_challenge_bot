@@ -71,6 +71,16 @@ const challenge = {
       logger.error(NAMESPACE, error, error);
     }
   },
+  getUserConditions(challengeDoc: IChallenge, userId: number) {
+    const userConditions = challengeDoc.participants
+      .find((user) => user.id === userId);
+    return userConditions?.user_conditions;
+  },
+  getUserConditionsByName(challengeDoc:IChallenge, userName:string) {
+    const userConditions = challengeDoc.participants
+      .find((user) => user.username === userName);
+    return userConditions?.user_conditions;
+  },
   async addReport(challengeDoc: IChallenge, report: Ireport) {
     try {
       const today = new Date();
@@ -87,7 +97,12 @@ const challenge = {
         challengeDoc.reports?.push(report);
         await challengeDoc.save();
       }
-      return isThereReport ? 'слыш сегодня от тебя уже был отчет' : 'отчет принят';
+      const userConditions = this.getUserConditions(challengeDoc, report.user_id);
+
+      let msg = `отчет принят ${renderMsgs.emojis.green_ok}`;
+      msg += userConditions ? `\nВаши условия были:\n ${userConditions}` : '';
+
+      return isThereReport ? `слыш сегодня от тебя уже был отчет ${renderMsgs.emojis.red_cross}` : msg;
     } catch (error) {
       logger.error(NAMESPACE, error, error);
     }
@@ -192,7 +207,21 @@ const challenge = {
   userStats(challengeDoc: IChallenge, userName: string) {
     const stats = this.endStats(challengeDoc);
     const message = renderMsgs.finalMsg(challengeDoc, { [userName]: stats[userName] }, true);
-    return message;
+    const userConditions = this.getUserConditionsByName(challengeDoc, userName);
+    const finalMsg = userConditions ? `Ваши условия:\n${userConditions}\n${message}` : message;
+    return finalMsg;
+  },
+  async setUserConditions(challengeDoc: IChallenge, userId:number, userConditions: string) {
+    const { participants } = challengeDoc;
+
+    const newParticipants = participants.map((participantObj) => {
+      if (participantObj.id === userId) {
+        participantObj.user_conditions = userConditions;
+      }
+      return participantObj;
+    });
+    challengeDoc.participants = newParticipants;
+    await challengeDoc.save();
   },
 };
 
