@@ -33,6 +33,16 @@ const challenge = {
     await challengeDoc.save();
   },
 
+  async kickByUserName(kickUser: string, challengeDoc: IChallenge) {
+    const isCorrect = challengeDoc.participants?.some(({ username }) => username === kickUser);
+    if (!isCorrect) return false;
+    const filtered = challengeDoc.participants?.filter(({ username }) => username !== kickUser);
+    // eslint-disable-next-line no-param-reassign
+    challengeDoc.participants = filtered;
+    await challengeDoc.save();
+    return true;
+  },
+
   isInChallenge(userId: number, challengeDoc: IChallenge) {
     const isIn = challengeDoc.participants?.some(({ id }) => id === userId);
     return isIn;
@@ -78,8 +88,8 @@ const challenge = {
         await challengeDoc.save();
       }
       return isThereReport ? 'слыш сегодня от тебя уже был отчет' : 'отчет принят';
-    } catch (error:any) {
-      logger.error(NAMESPACE, error.message, error);
+    } catch (error) {
+      logger.error(NAMESPACE, error, error);
     }
   },
 

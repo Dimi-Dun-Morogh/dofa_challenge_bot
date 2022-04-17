@@ -1,5 +1,9 @@
 import { Scenes } from 'telegraf';
-import { getCurrentChallenge, updateCurrentChallenge, deleteCurrentChallenge } from '../../../db/challenge_crud';
+import {
+  getCurrentChallenge,
+  updateCurrentChallenge,
+  deleteCurrentChallenge,
+} from '../../../db/challenge_crud';
 import logger from '../../../helpers/logger';
 import challenge from '../../helpers/challenge';
 import renderMsgs from '../../helpers/render-msgs';
@@ -23,35 +27,62 @@ controlMainScene.enter(async (ctx) => {
 
 controlMainScene.leave((ctx) => ctx.reply('выход из состояния челленджа'));
 
-controlMainScene.action(['exit', 'delchel', 'editconds', 'editname', 'startchel'], async (ctx: Scenes.SceneContext) => {
-  // @ts-ignore
-  const command = ctx.callbackQuery.data;
-  const chatId = ctx.chat?.id;
-
-  switch (command) {
-    case 'exit':
-      return ctx.scene.leave();
-    default:
-      break;
-    case 'editname':
-      ctx.scene.enter('renameScene');
-      break;
-    case 'editconds':
-      ctx.scene.enter('newConditionsScene');
-      break;
-    case 'delchel':
-      ctx.scene.enter('deleteChalScene');
-      break;
-    case 'startchel': {
-      const currChal = await getCurrentChallenge(chatId!);
-      if (currChal && !currChal.hasStarted) {
-        await challenge.startChallenge(currChal);
-        ctx.reply('ну че народ ра погнали на');
-      } else {
-        ctx.reply('ты че тут жмешь куалегла, уже идет челлендж, идет');
+controlMainScene.action(
+  ['exit', 'delchel', 'editconds', 'editname', 'startchel', 'kickuser'],
+  async (ctx: Scenes.SceneContext) => {
+    // @ts-ignore
+    const command = ctx.callbackQuery.data;
+    const chatId = ctx.chat?.id;
+    switch (command) {
+      case 'exit':
+        return ctx.scene.leave();
+      default:
+        break;
+      case 'kickuser':
+        ctx.scene.enter('kickUserScene');
+        break;
+      case 'editname':
+        ctx.scene.enter('renameScene');
+        break;
+      case 'editconds':
+        ctx.scene.enter('newConditionsScene');
+        break;
+      case 'delchel':
+        ctx.scene.enter('deleteChalScene');
+        break;
+      case 'startchel': {
+        const currChal = await getCurrentChallenge(chatId!);
+        if (currChal && !currChal.hasStarted) {
+          await challenge.startChallenge(currChal);
+          ctx.reply('ну че народ ра погнали на');
+        } else {
+          ctx.reply('ты че тут жмешь куалегла, уже идет челлендж, идет');
+        }
       }
     }
   }
+);
+
+const kickUserScene = new BaseScene<Scenes.SceneContext>('kickUserScene');
+
+kickUserScene.enter(async (ctx) => {
+  ctx.reply('пришлите мне ник для кика в формате - @tgusername', exitKey);
+});
+
+kickUserScene.on('text', async (ctx) => {
+  const { text } = ctx.message;
+  const chatId = ctx.message?.chat!.id;
+  const currentChallenge = await getCurrentChallenge(chatId);
+  const kicked = await challenge.kickByUserName(text, currentChallenge!);
+
+  if (!kicked) {
+    ctx.reply('Ты прислал неправильный юзернейм');
+  } else {
+    ctx.reply(`${text} кикнут успешно`);
+  }
+
+  ctx.scene.leave();
+  ctx.scene.enter('controlMainScene');
 });
 
 const renameScene = new BaseScene<Scenes.SceneContext>('renameScene');
@@ -107,7 +138,4 @@ deleteChalScene.action(['exit', 'yes'], async (ctx: Scenes.SceneContext) => {
   }
 });
 
-export {
-  controlMainScene, renameScene,
-  newConditionsScene, deleteChalScene,
-};
+export { controlMainScene, renameScene, newConditionsScene, deleteChalScene, kickUserScene };

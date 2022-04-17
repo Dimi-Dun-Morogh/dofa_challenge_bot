@@ -2,25 +2,26 @@ import express, { Request, Response } from 'express';
 import bot from './bot/bot';
 
 import {
-  cronDailyStat, cronIsChallengeDone, cronRemindLazies,
+  runCronTasks,
 } from './cron-tasks/challenge-cron';
 import { connectDb } from './db/db_connect';
 import logger from './helpers/logger';
 import wakeUpDyno from './helpers/antiIdle';
 
 const NAMESPACE = 'app.ts';
+(async () => {
+  try {
+    bot.launch()
+      .then(() => logger.info(NAMESPACE, 'bot up and running'));
 
-bot.launch()
-  .then(() => logger.info(NAMESPACE, 'bot up and running'))
-  .catch((error: Error) => logger.error(NAMESPACE, error.message, error));
+    await connectDb().then(() => logger.info(NAMESPACE, 'connect to DB success'));
 
-connectDb().then(() => logger.info(NAMESPACE, 'connect to DB success'));
-
-cronDailyStat.start();
-
-cronIsChallengeDone.start();
-
-cronRemindLazies.start();
+    // run all scheduled bot tasks
+    runCronTasks();
+  } catch (error) {
+    logger.error(NAMESPACE, error, error);
+  }
+})();
 
 // anti idle conspiracy
 const URL = 'https://dofa-challenge-bot.herokuapp.com/';

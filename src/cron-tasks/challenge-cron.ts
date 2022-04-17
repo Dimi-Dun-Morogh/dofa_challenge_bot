@@ -61,8 +61,14 @@ const cronRemindLazies = cron.schedule('0 10 20 * * *', async () => {
   }
 }).stop();
 
+const runCronTasks = () => {
+  cronDailyStat.start();
+
+  cronIsChallengeDone.start();
+
+  cronRemindLazies.start();
+};
+
 export {
-  cronDailyStat,
-  cronIsChallengeDone,
-  cronRemindLazies,
+  runCronTasks,
 };

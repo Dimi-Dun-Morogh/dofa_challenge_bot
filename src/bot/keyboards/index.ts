@@ -11,7 +11,9 @@ const noAndYesKeyboard = Markup.inlineKeyboard([Markup.button.callback('нет',
 const controlChalKeyboard = Markup.inlineKeyboard(
   [[Markup.button.callback('выйти', 'exit')],
     [Markup.button.callback('сменить название', 'editname'), Markup.button.callback('сменить условия', 'editconds')],
-    [Markup.button.callback('старт челленджа', 'startchel'), Markup.button.callback('удалить челлендж', 'delchel')]],
+    [Markup.button.callback('старт челленджа', 'startchel'), Markup.button.callback('удалить челлендж', 'delchel')],
+    [Markup.button.callback('кикнуть участника', 'kickuser')],
+  ],
 );
 
 export {

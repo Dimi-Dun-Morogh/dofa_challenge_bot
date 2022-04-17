@@ -5,9 +5,10 @@ import {
 import config from '../config/telegram';
 import {
   controlMainScene, renameScene,
-  newConditionsScene, deleteChalScene,
+  newConditionsScene, deleteChalScene, kickUserScene,
 } from './handlers/control-сhallenge/control-сhallenge.scene';
 import { joinChallengeHandler } from './handlers/join-challenge';
+import { LeaveChallengeHandler } from './handlers/leave-challenge';
 import { handleReport } from './handlers/process-report';
 
 import { challengeNameScene, describeChalScene, selectTimeScene } from './handlers/start-сhallenge/start-сhallenge.scene';
@@ -17,7 +18,7 @@ import { isAdmin, isPrivateChat } from './middlewares';
 const { Stage } = Scenes;
 const stage = new Stage<Scenes.SceneContext>([
   challengeNameScene, describeChalScene, selectTimeScene, controlMainScene, renameScene,
-  newConditionsScene, deleteChalScene]);
+  newConditionsScene, deleteChalScene, kickUserScene]);
 
 const bot = new Telegraf<Scenes.SceneContext>(config.botApiKey!);
 // middlewares
@@ -44,6 +45,7 @@ bot.command('/challenge_create', async (ctx) => {
 });
 
 bot.command('/join', (ctx) => joinChallengeHandler(ctx));
+bot.command('/leave', (ctx) => LeaveChallengeHandler(ctx));
 
 bot.command('/my_stats', (ctx) => myStatHandler(ctx));
 bot.command('/all_stats', async (ctx) => {
