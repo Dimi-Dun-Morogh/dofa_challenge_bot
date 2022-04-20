@@ -22,8 +22,12 @@ const cronDailyStat = cron
         // report em to DB false here
         await challenge.reportLazies(challengeObj);
 
-        await bot.telegram.sendMessage(challengeObj.chat_id, message,
-          { disable_notification: true });
+        if (message) {
+          renderMsgs.messageSplitter(message)
+            .forEach((text) => {
+              bot.telegram.sendMessage(challengeObj.chat_id, text);
+            });
+        }
       }
     } catch (error) {
       logger.error(NAMESPACE, error, error);
