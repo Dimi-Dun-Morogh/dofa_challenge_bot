@@ -23,6 +23,16 @@ const getCurrentChallenge = async (chatId: number) => {
   }
 };
 
+const getChallengeById = async (Id: string) => {
+  try {
+    const res = await challengeModel.findOne({ _id: Id });
+    logger.info(NAMESPACE, 'current Challenge', res);
+    return res;
+  } catch (error) {
+    logger.error(NAMESPACE, error, error);
+  }
+};
+
 const updateCurrentChallenge = async (chatId: number, data:any) => {
   try {
     const res = await challengeModel.findOneAndUpdate({
@@ -55,10 +65,21 @@ const getAllCurrentChallenges = async () => {
   }
 };
 
+const getAllChallenges = async () => {
+  try {
+    const challenges = await challengeModel.find();
+    return challenges;
+  } catch (error) {
+    logger.error(NAMESPACE, error, error);
+  }
+};
+
 export {
   createChallengeDb,
   getCurrentChallenge,
   updateCurrentChallenge,
   deleteCurrentChallenge,
   getAllCurrentChallenges,
+  getAllChallenges,
+  getChallengeById,
 };

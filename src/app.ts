@@ -7,6 +7,7 @@ import {
 import { connectDb } from './db/db_connect';
 import logger from './helpers/logger';
 import wakeUpDyno from './helpers/antiIdle';
+import challengeRouter, { ROUTES } from './REST/router';
 
 const NAMESPACE = 'app.ts';
 (async () => {
@@ -33,6 +34,10 @@ app.get('/', (request: Request, response: Response) => {
   logger.info(NAMESPACE, `${Date.now()} Ping Received`);
   response.sendStatus(200);
 });
-app.listen(process.env.PORT, () => {
+
+app.use(express.json());
+app.use(ROUTES.CHALLENGES, challengeRouter);
+
+app.listen(process.env.PORT || 1337, () => {
   wakeUpDyno(URL);
 });

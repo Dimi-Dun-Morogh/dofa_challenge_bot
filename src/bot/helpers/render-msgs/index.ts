@@ -1,5 +1,5 @@
 import {
-  dailyStatObj, IFinalObj, INewChallenge, previewChalObj,
+  dailyStatObj, IChallenge, IFinalObj, previewChalObj,
 } from '../../../types';
 import challenge from '../challenge';
 import emojis from './emojis';
@@ -13,10 +13,10 @@ const renderMsgs = {
     return `${saintsRow}Челлендж создан${saintsRow}.\nДанные:\nНазвание челленджа: ${nameOfChallenge}\nусловия челленджа:\n${conditions}\n\nдлительность челленджа:\n${durationOfChallenge} дней\n ${pin}управлять состоянием челленджа${pin} - /challenge_state`;
   },
 
-  controlChal(chalObj: INewChallenge):string {
+  controlChal(chalObj: IChallenge):string {
     const {
       conditions, nameOfChallenge, durationOfChallenge,
-      dateOfEnd, dateOfStart, hasStarted, participants,
+      dateOfEnd, dateOfStart, hasStarted, participants, _id,
     } = chalObj;
     let participantsStr = '';
     if (participants?.length) {
@@ -33,6 +33,7 @@ const renderMsgs = {
     дата конца: ${new Date(dateOfEnd).toLocaleString('en-GB', { hour12: false })}
     Челлендж начался?: ${hasStarted ? 'да' : 'нет'}
     Участники: [${participantsStr}]
+    Линк на JSON с данными челленджа https://dofa-challenge-bot.herokuapp.com/api/challenges/${_id}
     `;
   },
   dailyMsg(stats: dailyStatObj) {
@@ -48,7 +49,7 @@ ${statStr}
 после 22:00 отчеты не принимаются!
     `;
   },
-  finalMsg(chalObj: INewChallenge, stats: IFinalObj, isNotEnd?: boolean | undefined) {
+  finalMsg(chalObj: IChallenge, stats: IFinalObj, isNotEnd?: boolean | undefined) {
     const statsRendered = Object.entries(stats).reduce((acc, [name, stat]) => {
       let res = acc;
       const statStr = stat.reduce((accM, dayRes) => accM += `${dayRes ? emojis.green_ok : emojis.red_cross}`, '');
@@ -61,7 +62,9 @@ ${statStr}
       return res;
     }, '');
     return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.
-${statsRendered}`;
+${statsRendered}
+Линк на JSON с данными челленджа https://dofa-challenge-bot.herokuapp.com/api/challenges/${chalObj._id}
+`;
   },
   messageSplitter(messageString: string) {
     const max_size = 4096;
