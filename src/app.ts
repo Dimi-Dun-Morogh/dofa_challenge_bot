@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import bot from './bot/bot';
 
 import {
@@ -27,6 +28,7 @@ const NAMESPACE = 'app.ts';
 // anti idle conspiracy
 const URL = 'https://dofa-challenge-bot.herokuapp.com/';
 const app = express();
+app.use(cors());
 
 wakeUpDyno(URL);
 

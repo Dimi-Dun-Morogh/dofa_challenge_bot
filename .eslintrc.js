@@ -25,5 +25,5 @@ module.exports = {
     "no-nested-ternary": "off",
     "no-param-reassign": "off",
   },
-  ignorePatterns: ['.eslintrc.js']
+  ignorePatterns: ['.eslintrc.js', '**/front_end']
 };

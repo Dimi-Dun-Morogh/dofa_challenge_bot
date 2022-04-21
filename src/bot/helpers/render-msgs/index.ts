@@ -33,6 +33,7 @@ const renderMsgs = {
     дата конца: ${new Date(dateOfEnd).toLocaleString('en-GB', { hour12: false })}
     Челлендж начался?: ${hasStarted ? 'да' : 'нет'}
     Участники: [${participantsStr}]
+    
     Линк на JSON с данными челленджа https://dofa-challenge-bot.herokuapp.com/api/challenges/${_id}
     `;
   },
@@ -63,6 +64,7 @@ ${statStr}
     }, '');
     return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.
 ${statsRendered}
+
 Линк на JSON с данными челленджа https://dofa-challenge-bot.herokuapp.com/api/challenges/${chalObj._id}
 `;
   },
