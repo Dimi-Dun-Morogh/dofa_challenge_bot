@@ -3,7 +3,7 @@ import logger from '../../helpers/logger';
 
 const NAMESPACE = 'BOT-MIDDLEWARE';
 
-const isReport = () => (ctx: any, next:any) => {
+const isReport = () => (ctx: any, next: any) => {
   try {
     if (!ctx.message) return null;
 
@@ -12,14 +12,14 @@ const isReport = () => (ctx: any, next:any) => {
     if (!text && !caption) return null;
 
     const msg = text || caption;
-    const allowed: { [key:string]: boolean } = {
+    const allowed: { [key: string]: boolean } = {
       '#отчет': true,
       '#отчёт': true,
       '/start': true,
       '/info': true,
       exit: true,
     };
-    const [command]:[string] = msg.split(' ');
+    const [command]: [string] = msg.split(' ');
 
     if (allowed[command]) return next();
   } catch (error) {
@@ -42,15 +42,12 @@ const isAdmin = async (ctx: Context) => {
 
 const isPrivateChat = () => async (ctx: Context, next: any) => {
   try {
-    if (ctx.chat?.type === 'private') return await ctx.reply('сорян браток, бот работает в групповых чатах, а не соло диалоге');
+    if (ctx.chat?.type === 'private')
+      return await ctx.reply('сорян браток, бот работает в групповых чатах, а не соло диалоге');
     return next();
   } catch (error) {
     logger.error(NAMESPACE, error.message, error);
   }
 };
 
-export {
-  isReport,
-  isAdmin,
-  isPrivateChat,
-};
+export { isReport, isAdmin, isPrivateChat };

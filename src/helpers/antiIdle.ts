@@ -13,8 +13,11 @@ const wakeUpDyno = (url: string, interval = 25, callback?: Function) => {
       fetch(url).then(() => logger.info(NAMESPACE, `Fetching ${url}.`));
     } catch (err) {
       // catch fetch errors
-      logger.error(NAMESPACE, `Error fetching ${url}: ${err.message}
-          Will try again in ${interval} minutes...`);
+      logger.error(
+        NAMESPACE,
+        `Error fetching ${url}: ${err.message}
+          Will try again in ${interval} minutes...`
+      );
     } finally {
       try {
         if (!callback) return null;

@@ -1,0 +1,40 @@
+.App {
+  border: 1px solid black;
+  min-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.footer-app {
+  border-top: 2px solid black;
+}
+
+.footer-app ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+}
+.footer-app ul li {
+  margin-right: 10px;
+}
+
+.footer-app ul a {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.footer-app ul a:hover {
+  text-decoration:underline;
+  color: black!important;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.footer-app ul a i {
+  font-size: 1.5rem;
+  margin-left: 5px;
+}

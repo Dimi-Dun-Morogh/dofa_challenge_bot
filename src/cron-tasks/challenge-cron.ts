@@ -23,47 +23,52 @@ const cronDailyStat = cron
         await challenge.reportLazies(challengeObj);
 
         if (message) {
-          renderMsgs.messageSplitter(message)
-            .forEach((text) => {
-              bot.telegram.sendMessage(challengeObj.chat_id, text);
-            });
+          renderMsgs.messageSplitter(message).forEach((text) => {
+            bot.telegram.sendMessage(challengeObj.chat_id, text);
+          });
         }
       }
     } catch (error) {
       logger.error(NAMESPACE, error, error);
     }
-  }).stop();
+  })
+  .stop();
 
 // '0 10 23 * * *'
-const cronIsChallengeDone = cron.schedule('0 10 23 * * *', async () => {
-  try {
-    const allChallenges = await getAllCurrentChallenges();
-    allChallenges?.forEach((chal) => {
-      const msg = challenge.endChallenge(chal);
-      if (msg) {
-        renderMsgs.messageSplitter(msg)
-          .forEach((text) => bot.telegram.sendMessage(chal.chat_id, text));
-        chal.isCompleted = true;
-        chal.save();
-      }
-    });
-  } catch (error) {
-    logger.error(NAMESPACE, error, error);
-  }
-}).stop();
+const cronIsChallengeDone = cron
+  .schedule('0 10 23 * * *', async () => {
+    try {
+      const allChallenges = await getAllCurrentChallenges();
+      allChallenges?.forEach((chal) => {
+        const msg = challenge.endChallenge(chal);
+        if (msg) {
+          renderMsgs
+            .messageSplitter(msg)
+            .forEach((text) => bot.telegram.sendMessage(chal.chat_id, text));
+          chal.isCompleted = true;
+          chal.save();
+        }
+      });
+    } catch (error) {
+      logger.error(NAMESPACE, error, error);
+    }
+  })
+  .stop();
 
-const cronRemindLazies = cron.schedule('0 10 20 * * *', async () => {
-  try {
-    const allChallenges = await getAllCurrentChallenges();
-    allChallenges?.forEach((challengeObj) => {
-      const stat = challenge.dailyLazies(challengeObj);
-      const msgString = renderMsgs.layziesDailyMsg(stat);
-      bot.telegram.sendMessage(challengeObj.chat_id, msgString);
-    });
-  } catch (error) {
-    logger.error(NAMESPACE, 'error in cronRemindLazies()', error);
-  }
-}).stop();
+const cronRemindLazies = cron
+  .schedule('0 10 20 * * *', async () => {
+    try {
+      const allChallenges = await getAllCurrentChallenges();
+      allChallenges?.forEach((challengeObj) => {
+        const stat = challenge.dailyLazies(challengeObj);
+        const msgString = renderMsgs.layziesDailyMsg(stat);
+        bot.telegram.sendMessage(challengeObj.chat_id, msgString);
+      });
+    } catch (error) {
+      logger.error(NAMESPACE, 'error in cronRemindLazies()', error);
+    }
+  })
+  .stop();
 
 const runCronTasks = () => {
   cronDailyStat.start();
@@ -73,6 +78,4 @@ const runCronTasks = () => {
   cronRemindLazies.start();
 };
 
-export {
-  runCronTasks,
-};
+export { runCronTasks };

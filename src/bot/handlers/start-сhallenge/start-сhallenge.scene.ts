@@ -19,7 +19,9 @@ challengeNameScene.enter(async (ctx) => {
   logger.info(NAMESPACE, 'nameScene currenCHal', currentChal);
   if (currentChal) {
     ctx.scene.leave();
-    return ctx.reply('А у тебя уже есть один незаконченный челлендж, ебош\n  комманду challenge_state');
+    return ctx.reply(
+      'А у тебя уже есть один незаконченный челлендж, ебош\n  комманду challenge_state'
+    );
   }
   ctx.reply('Отправьте мне название челленджа', exitKey);
 });
@@ -58,7 +60,12 @@ describeChalScene.leave((ctx) => ctx.reply('выход из сцены усло�
 //
 const selectTimeScene = new BaseScene<Scenes.SceneContext>('selectTimeScene');
 
-selectTimeScene.enter((ctx) => ctx.reply('Выберите временной диапозон в течении которого будет длиться челлендж', timeRangeKeyboard));
+selectTimeScene.enter((ctx) =>
+  ctx.reply(
+    'Выберите временной диапозон в течении которого будет длиться челлендж',
+    timeRangeKeyboard
+  )
+);
 
 selectTimeScene.action(['1week', '2weeks', '4weeks'], (ctx: Scenes.SceneContext) => {
   const dictionary = {
@@ -81,7 +88,4 @@ selectTimeScene.action(['1week', '2weeks', '4weeks'], (ctx: Scenes.SceneContext)
   challenge.createChallenge(chalObj);
 });
 
-export {
-  challengeNameScene, describeChalScene,
-  selectTimeScene,
-};
+export { challengeNameScene, describeChalScene, selectTimeScene };

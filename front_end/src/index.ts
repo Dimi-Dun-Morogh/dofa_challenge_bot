@@ -1,12 +1,15 @@
-import api from "./api";
+import render from './render';
+import router from "./router";
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './styles.css';
 
-function component() {
-  const element = document.createElement('div');
 
-  element.innerHTML = 'Hello webpack';
+window.addEventListener('load',async ()=>{
+  render.initAppEntry();
 
-  return element;
-}
+})
 
-document.body.appendChild(component());
-api.getAllChallenges();
+window.addEventListener('load', router);
+window.addEventListener('hashchange', router);

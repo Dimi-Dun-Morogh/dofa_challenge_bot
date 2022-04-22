@@ -1,7 +1,13 @@
 import { createChallengeDb } from '../../../db/challenge_crud';
 import logger from '../../../helpers/logger';
 import {
-  previewChalObj, dailyStatObj, participant, IChallenge, Ireport, IendObj, IFinalObj,
+  previewChalObj,
+  dailyStatObj,
+  participant,
+  IChallenge,
+  Ireport,
+  IendObj,
+  IFinalObj,
 } from '../../../types';
 import renderMsgs from '../render-msgs';
 
@@ -50,9 +56,7 @@ const challenge = {
 
   async startChallenge(challengeDoc: IChallenge) {
     try {
-      const {
-        durationOfChallenge,
-      } = challengeDoc;
+      const { durationOfChallenge } = challengeDoc;
       const today = new Date();
       const endChallenge = new Date();
 
@@ -62,8 +66,7 @@ const challenge = {
 
       await challengeDoc.update({
         dateOfStart: Number(today),
-        dateOfEnd:
-    Number(endChallenge),
+        dateOfEnd: Number(endChallenge),
         hasStarted: true,
       });
       logger.info(NAMESPACE, 'start challenge succes', challengeDoc);
@@ -72,13 +75,11 @@ const challenge = {
     }
   },
   getUserConditions(challengeDoc: IChallenge, userId: number) {
-    const userConditions = challengeDoc.participants
-      .find((user) => user.id === userId);
+    const userConditions = challengeDoc.participants.find((user) => user.id === userId);
     return userConditions?.user_conditions;
   },
-  getUserConditionsByName(challengeDoc:IChallenge, userName:string) {
-    const userConditions = challengeDoc.participants
-      .find((user) => user.username === userName);
+  getUserConditionsByName(challengeDoc: IChallenge, userName: string) {
+    const userConditions = challengeDoc.participants.find((user) => user.username === userName);
     return userConditions?.user_conditions;
   },
   async addReport(challengeDoc: IChallenge, report: Ireport) {
@@ -90,8 +91,9 @@ const challenge = {
       todayEnd.setHours(23);
       todayEnd.setMinutes(0);
       if (report.date > Number(todayEnd)) return 'опоздал  глэк, отчеты до 23:00';
-      const isThereReport = challengeDoc.reports?.some(({ date, user_id }) => date > Number(today)
-       && user_id === report.user_id);
+      const isThereReport = challengeDoc.reports?.some(
+        ({ date, user_id }) => date > Number(today) && user_id === report.user_id
+      );
 
       if (!isThereReport) {
         challengeDoc.reports?.push(report);
@@ -102,7 +104,9 @@ const challenge = {
       let msg = `отчет принят ${renderMsgs.emojis.green_ok}`;
       msg += userConditions ? `\nВаши условия были:\n ${userConditions}` : '';
 
-      return isThereReport ? `слыш сегодня от тебя уже был отчет ${renderMsgs.emojis.red_cross}` : msg;
+      return isThereReport
+        ? `слыш сегодня от тебя уже был отчет ${renderMsgs.emojis.red_cross}`
+        : msg;
     } catch (error) {
       logger.error(NAMESPACE, error, error);
     }
@@ -114,7 +118,8 @@ const challenge = {
       today.setHours(0);
       today.setMinutes(0);
 
-      const status = challengeDoc.reports?.filter((report) => report.date > Number(today))
+      const status = challengeDoc.reports
+        ?.filter((report) => report.date > Number(today))
         .find(({ user_id }) => user_id === participantObj.id);
 
       const res = { ...acc };
@@ -140,8 +145,9 @@ const challenge = {
       //! достать user id from challenge.participants;
       const username = dalazies[i][0];
 
-      const userId = challengeObj.participants
-        .find(({ username: usernameRep }) => usernameRep === username);
+      const userId = challengeObj.participants.find(
+        ({ username: usernameRep }) => usernameRep === username
+      );
 
       const report = {
         date: Number(new Date()),
@@ -157,7 +163,7 @@ const challenge = {
 
   endStats(challengeDoc: IChallenge) {
     const { reports, participants } = challengeDoc;
-    const endObj : IendObj = reports?.reduce((acc, repObj) => {
+    const endObj: IendObj = reports?.reduce((acc, repObj) => {
       const { date } = repObj;
       const res = acc;
       const key = new Date(date);
@@ -172,7 +178,7 @@ const challenge = {
       const res = acc;
       res[user.username] = undefined;
       return res;
-    }, {} as { [key:string]:undefined });
+    }, {} as { [key: string]: undefined });
 
     Object.keys(endObj).forEach((key) => {
       endObj[key] = { ...names };
@@ -195,7 +201,7 @@ const challenge = {
     return final;
   },
 
-  endChallenge(challengeDoc: IChallenge, isNotEnd?: boolean| undefined) {
+  endChallenge(challengeDoc: IChallenge, isNotEnd?: boolean | undefined) {
     const { dateOfEnd } = challengeDoc;
     const today = Number(new Date());
     if (dateOfEnd > today && !isNotEnd) return false;
@@ -211,7 +217,7 @@ const challenge = {
     const finalMsg = userConditions ? `Ваши условия:\n${userConditions}\n${message}` : message;
     return finalMsg;
   },
-  async setUserConditions(challengeDoc: IChallenge, userId:number, userConditions: string) {
+  async setUserConditions(challengeDoc: IChallenge, userId: number, userConditions: string) {
     const { participants } = challengeDoc;
 
     const newParticipants = participants.map((participantObj) => {

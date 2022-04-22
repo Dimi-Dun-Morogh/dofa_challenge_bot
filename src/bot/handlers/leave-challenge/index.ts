@@ -11,7 +11,8 @@ const LeaveChallengeHandler = async (ctx: Context) => {
     const { id } = ctx.message!.from!;
     const alreadyIn = challenge.isInChallenge(id!, currentChallenge);
 
-    if (!alreadyIn) return ctx.reply('ты шо глэк? ты ещё не в челендже', { reply_to_message_id: message_id });
+    if (!alreadyIn)
+      return ctx.reply('ты шо глэк? ты ещё не в челендже', { reply_to_message_id: message_id });
 
     await challenge.leaveChallenge(id, currentChallenge);
 
@@ -21,6 +22,4 @@ const LeaveChallengeHandler = async (ctx: Context) => {
   }
 };
 
-export {
-  LeaveChallengeHandler,
-};
+export { LeaveChallengeHandler };

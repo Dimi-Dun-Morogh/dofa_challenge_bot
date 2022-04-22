@@ -33,12 +33,16 @@ const getChallengeById = async (Id: string) => {
   }
 };
 
-const updateCurrentChallenge = async (chatId: number, data:any) => {
+const updateCurrentChallenge = async (chatId: number, data: any) => {
   try {
-    const res = await challengeModel.findOneAndUpdate({
-      chat_id: chatId,
-      isCompleted: false,
-    }, data, { upsert: true });
+    const res = await challengeModel.findOneAndUpdate(
+      {
+        chat_id: chatId,
+        isCompleted: false,
+      },
+      data,
+      { upsert: true }
+    );
     return res;
   } catch (error) {
     logger.error(NAMESPACE, error, error);

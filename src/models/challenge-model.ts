@@ -40,9 +40,7 @@ const challengeSchema = new mongoose.Schema({
   chat_id: {
     type: Number,
   },
-  reports: [
-    reportSchema,
-  ],
+  reports: [reportSchema],
   participants: [participantSchema],
 });
 

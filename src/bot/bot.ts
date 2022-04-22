@@ -1,26 +1,38 @@
-import {
-  Telegraf, session, Scenes,
-} from 'telegraf';
+import { Telegraf, session, Scenes } from 'telegraf';
 
 import config from '../config/telegram';
 import {
-  controlMainScene, renameScene,
-  newConditionsScene, deleteChalScene, kickUserScene,
+  controlMainScene,
+  renameScene,
+  newConditionsScene,
+  deleteChalScene,
+  kickUserScene,
 } from './handlers/control-сhallenge/control-сhallenge.scene';
 import { joinChallengeHandler } from './handlers/join-challenge';
 import { LeaveChallengeHandler } from './handlers/leave-challenge';
 import { handleReport } from './handlers/process-report';
 import { UserConditionsHandler } from './handlers/user-conditions';
 
-import { challengeNameScene, describeChalScene, selectTimeScene } from './handlers/start-сhallenge/start-сhallenge.scene';
+import {
+  challengeNameScene,
+  describeChalScene,
+  selectTimeScene,
+} from './handlers/start-сhallenge/start-сhallenge.scene';
 import { allStatHandler, myStatHandler } from './handlers/stat-handlers';
 
 import { isAdmin, isPrivateChat } from './middlewares';
 
 const { Stage } = Scenes;
 const stage = new Stage<Scenes.SceneContext>([
-  challengeNameScene, describeChalScene, selectTimeScene, controlMainScene, renameScene,
-  newConditionsScene, deleteChalScene, kickUserScene]);
+  challengeNameScene,
+  describeChalScene,
+  selectTimeScene,
+  controlMainScene,
+  renameScene,
+  newConditionsScene,
+  deleteChalScene,
+  kickUserScene,
+]);
 
 const bot = new Telegraf<Scenes.SceneContext>(config.botApiKey!);
 // middlewares

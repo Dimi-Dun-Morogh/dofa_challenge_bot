@@ -26,5 +26,4 @@ export default router;
 
 export enum ROUTES {
   CHALLENGES = '/api/challenges',
-
 }
