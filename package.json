@@ -4,6 +4,7 @@
   "description": "omg I'm gonna COOOOOOOODE",
   "main": "index.js",
   "scripts": {
+    "heroku-prebuild": "npm --prefix ./front_end/   install --dev",
     "build": "rm -rf build/ && prettier --write src/ && tsc && npm run build-FE",
     "dev": "npx nodemon --delay 5.5 ./src/app.ts",
     "start": "node ./build/app.js",
