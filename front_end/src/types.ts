@@ -33,8 +33,10 @@ interface IChallenge extends previewChalObj{
   reports?: Array<Ireport>
   participants: Array<participant>
 }
+type userStats = {username: string; positiveReports: number}
+type statsRepObj = { [key: string]: userStats }
 
 
 export {
-  IChallenge
+  IChallenge, Ireport, statsRepObj, userStats
 }

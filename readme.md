@@ -1,5 +1,5 @@
-#dofa-challenge-bot
-https://t.me/dofa_challenge_bot
+##dofa-challenge-bot
+https://t.me/dofa_challenge_bot<BR>
 https://dofa-challenge-bot.herokuapp.com/static
 >телеграм бот для проведения челендж марафонов в чатах. Доступны промежутки в 7-14-28 дней. Пользователь с правами админа создает челлендж, участники присоеденяются к челленджу коммандой /join. Админ начинает челлендж. После старта челленджа участники делают отчет тегом #отчет или #отчёт. Бот запишет отчет в статистику. Каждый день в 23:00 по мск бот будет отсылать статистику за текущий день. Отчеты можно кидать до 23:00. В день окончания челленджа в 23:10 бот пришлет статистику за весь челлендж.
 
@@ -32,6 +32,11 @@ https://dofa-challenge-bot.herokuapp.com/static
 #### kick
 ![Alt text](images/kicked.JPG?raw=true "challengePreviRes")
 
+#### web
+![Alt text](images/web1.JPG?raw=true "challengePreviRes")
+![Alt text](images/web2.JPG?raw=true "challengePreviRes")
+![Alt text](images/web3.JPG?raw=true "challengePreviRes")
+
 #### todo:
 
 - [x] сделать нового бота, настроить взаимодействие со скриптом, создать и подключиться к бд (20.02.2021) ✅
@@ -52,4 +57,6 @@ https://dofa-challenge-bot.herokuapp.com/static
 - [x] сделать персональные условия которые будут вписываться к основным условиям автоматически (17.04.2022) ✅
 - [x] добавить 2 роута /api/challenges/:id ; /api/challenges/all (20.04.2022) ✅
 - [x] сделан фронтенд https://dofa-challenge-bot.herokuapp.com/static (22.04.2022) ✅
+- [x] сделать рендер статов челленджа на /static#/id  (04.05.2022) ✅
+- [ ] сделать возможность проводить челлендж в соло диалоге
 

@@ -1,4 +1,4 @@
-import { IChallenge } from './types';
+import { IChallenge, statsRepObj, userStats } from './types';
 
 class Render {
   initAppEntry() {
@@ -26,7 +26,7 @@ class Render {
         conditions,
         participants,
         dateOfEnd,
-        _id
+        _id,
       } = challenge;
       prevData += `
       <tr>
@@ -58,6 +58,7 @@ class Render {
   </table>
     `;
     const element = document.createElement('div');
+    element.classList.add('table-responsive');
     element.innerHTML = table;
     return element;
   }
@@ -81,6 +82,7 @@ class Render {
   </tr>
     `;
     const table = `
+    <div class='table-responsive'>
     <table class="table table-hover table-bordered table-success table-striped">
     <thead>
       <tr>
@@ -95,16 +97,69 @@ class Render {
       ${tableContent}
     </tbody>
   </table>
+  </div>
     `;
     content.innerHTML = table;
+    content.innerHTML+= `<h3 class="text-center">Участники:</h3>`;
 
     const listOfParticipants = `<div><ul class="list-group list-group-horizontal flex-wrap">
-    ${participants.reduce((acc,participant)=>acc+=`<li class="list-group-item">${participant.username}</li>`,'')}
+    ${participants.reduce(
+      (acc, participant) => (acc += `<li class="list-group-item">${participant.username}</li>`),
+      ''
+    )}
   </ul>
   </div>
   `;
 
-  content.innerHTML += listOfParticipants;
+    content.innerHTML += listOfParticipants;
+    content.appendChild(this.allUserProgress(challenge));
+  }
+  allUserProgress(challenge: IChallenge) {
+    const reportsByUser = challenge.reports.reduce((acc, report) => {
+      if (acc[report.user_id]) {
+        acc[report.user_id].positiveReports += report.reported ? 1 : 0;
+      } else {
+        acc[report.user_id] = {
+          username: report.username,
+          positiveReports: report.reported ? 1 : 0,
+        };
+      }
+
+      return acc;
+    }, {} as statsRepObj);
+
+    const container = document.createElement('div');
+    container.insertAdjacentHTML('afterbegin', `<h3 class="text-center">Статистика:</h3>`)
+
+    Object.values(reportsByUser)
+      .sort((a, b) => b.positiveReports - a.positiveReports)
+      .forEach((reportObj) => {
+        const element = this.userProgress(+challenge.durationOfChallenge, reportObj);
+        container.appendChild(element);
+      });
+    return container;
+  }
+  userProgress(chalDur: number, statsRepObj: userStats) {
+    const { username, positiveReports } = statsRepObj;
+    const element = document.createElement('div');
+    element.classList.add('user-progress');
+    const positiveWidth = (positiveReports / chalDur) * 100;
+
+    const html = `
+    <h6 class="text-center">${username}</h6>
+    <div class="progress" style="height:25px">
+    <div class="progress-bar bg-info" role="progressbar" style="width: ${positiveWidth}%;" aria-valuenow="${positiveReports}" aria-valuemin="0" aria-valuemax="100">${positiveReports}</div>
+
+    <div class="progress-bar bg-danger" role="progressbar" style="width: ${
+      100 - positiveWidth
+    }%;" aria-valuenow="${chalDur - positiveReports}" aria-valuemin="0" aria-valuemax="100">${
+      chalDur - positiveReports
+    }</div>
+
+    </div>
+`;
+    element.innerHTML = html;
+    return element;
   }
   header() {
     const container = document.createElement('div');
@@ -120,9 +175,10 @@ class Render {
     container.classList.add('footer-app', 'bg-success', 'bg-opacity-30', 'p-2');
     const html = `
     <ul>
-     <li><a href="https://t.me/dimibro" class="text-white">связаться с разработчиком<i class="bi bi-telegram footer-icon"></i></a></li>
-     <li><a href="https://github.com/Dimi-Dun-Morogh/dofa_challenge_bot" class="text-white"> github <i class="bi bi-github footer-icon"></i></a></li>
-     <li><a href="#" class="text-white">На главную <i class="bi bi-house-heart-fill"></i></a></li>
+    <li><a href="#" class="text-white"><i class="bi bi-house-heart-fill"></i>На главную </a></li>
+     <li><a href="https://t.me/dimibro" class="text-white"><i class="bi bi-telegram footer-icon"></i>связаться с разработчиком</a></li>
+     <li><a href="https://github.com/Dimi-Dun-Morogh/dofa_challenge_bot" class="text-white"><i class="bi bi-github footer-icon"></i> github </a></li>
+
     </ul>
     `;
     container.insertAdjacentHTML('afterbegin', html);
