@@ -1,6 +1,6 @@
 import { dailyStatObj, IChallenge, IFinalObj, previewChalObj } from '../../../types';
 
-import emojis from './emojis';
+import emojis, { textToEmoji } from './emojis';
 
 const renderMsgs = {
   emojis,
@@ -75,7 +75,16 @@ ${statStr}
       res += `${name}${condsMsg} : [${statStr}]\n`;
       return res;
     }, '');
-    return `Челлендж ${chalObj.nameOfChallenge} ${isNotEnd ? 'предварительные резы' : 'окончен'}.
+    const { dateOfEnd, durationOfChallenge } = chalObj;
+
+    const daysTillEnd = Math.round((dateOfEnd - Number(new Date())) / (60 * 60 * 24 * 1000));
+    const todaysDay = +durationOfChallenge - daysTillEnd;
+
+    return `Челлендж ${chalObj.nameOfChallenge} \n\n ${this.emojis.pin} Дней до конца ${textToEmoji(
+      daysTillEnd
+    )}\n ${this.emojis.pin} Сегодня день ${textToEmoji(todaysDay)}\n\n${this.emojis.pin} ${
+      isNotEnd ? 'предварительные резы' : 'окончен'
+    }
 ${statsRendered}
 
 Линк на страничку с данными челленджа https://dofa-challenge-bot.herokuapp.com/static#/id${

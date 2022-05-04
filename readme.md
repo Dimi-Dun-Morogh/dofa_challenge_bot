@@ -58,5 +58,5 @@ https://dofa-challenge-bot.herokuapp.com/static
 - [x] добавить 2 роута /api/challenges/:id ; /api/challenges/all (20.04.2022) ✅
 - [x] сделан фронтенд https://dofa-challenge-bot.herokuapp.com/static (22.04.2022) ✅
 - [x] сделать рендер статов челленджа на /static#/id  (04.05.2022) ✅
-- [ ] сделать возможность проводить челлендж в соло диалоге
+- [x] сделать возможность проводить челлендж в соло диалоге (04.05.2022) ✅
 

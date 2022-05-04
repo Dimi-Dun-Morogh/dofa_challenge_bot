@@ -6,7 +6,7 @@ const myStatHandler = async (ctx: Context) => {
   const chatId = ctx.chat?.id;
   const {
     message_id: replyId,
-    from: { username },
+    from: { username, id },
   } = ctx.message!;
   const challengeDoc = await getCurrentChallenge(chatId!);
 
@@ -14,7 +14,17 @@ const myStatHandler = async (ctx: Context) => {
     return ctx.reply('челленджа еще нет или не начался', { reply_to_message_id: replyId });
   }
 
-  const msg = challenge.userStats(challengeDoc, `@${username!}`);
+  const today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+
+  const isThereReport = challengeDoc.reports?.some(
+    ({ date, user_id }) => date > Number(today) && user_id === id
+  );
+
+  let msg = challenge.userStats(challengeDoc, `@${username!}`);
+
+  msg += isThereReport ? '\n\n Сегодня от вас уже был отчет' : '\n\n Сегодня от вас не было отчета';
   ctx.reply(msg, { reply_to_message_id: replyId });
 };
 

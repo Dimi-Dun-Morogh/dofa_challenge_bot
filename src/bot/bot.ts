@@ -41,36 +41,42 @@ const bot = new Telegraf<Scenes.SceneContext>(config.botApiKey!);
 
 stage.hears('exit', (ctx) => ctx.scene.leave());
 
-bot.use(session());
+(() => {
+  try {
+    bot.use(session());
 
-bot.use(stage.middleware());
-bot.use(isPrivateChat());
+    bot.use(stage.middleware());
+    // bot.use(isPrivateChat());
 
-bot.command('/challenge_state', async (ctx) => {
-  const admin = await isAdmin(ctx);
-  if (!admin) return ctx.reply('куда лезешь, это для админов');
-  ctx.scene.enter('controlMainScene');
-});
+    bot.command('/challenge_state', async (ctx) => {
+      const admin = await isAdmin(ctx);
+      if (!admin) return ctx.reply('куда лезешь, это для админов');
+      ctx.scene.enter('controlMainScene');
+    });
 
-bot.command('/challenge_create', async (ctx) => {
-  const admin = await isAdmin(ctx);
-  if (!admin) return ctx.reply('куда лезешь, это для админов');
-  ctx.scene.enter('challengeNameScene');
-});
+    bot.command('/challenge_create', async (ctx) => {
+      const admin = await isAdmin(ctx);
+      if (!admin) return ctx.reply('куда лезешь, это для админов');
+      ctx.scene.enter('challengeNameScene');
+    });
 
-bot.command('/join', (ctx) => joinChallengeHandler(ctx));
-bot.command('/leave', (ctx) => LeaveChallengeHandler(ctx));
-bot.command('/conditions', (ctx) => UserConditionsHandler(ctx));
+    bot.command('/join', (ctx) => joinChallengeHandler(ctx));
+    bot.command('/leave', (ctx) => LeaveChallengeHandler(ctx));
+    bot.command('/conditions', (ctx) => UserConditionsHandler(ctx));
 
-bot.command('/my_stats', (ctx) => myStatHandler(ctx));
-bot.command('/all_stats', async (ctx) => {
-  const admin = await isAdmin(ctx);
-  if (!admin) return ctx.reply('куда лезешь, это для админов');
-  allStatHandler(ctx);
-});
+    bot.command('/my_stats', (ctx) => myStatHandler(ctx));
+    bot.command('/all_stats', async (ctx) => {
+      const admin = await isAdmin(ctx);
+      if (!admin) return ctx.reply('куда лезешь, это для админов');
+      allStatHandler(ctx);
+    });
 
-bot.on('message', (ctx) => {
-  handleReport(ctx);
-});
+    bot.on('message', (ctx) => {
+      handleReport(ctx);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+})();
 
 export default bot;
