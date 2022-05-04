@@ -62,6 +62,7 @@ ${statStr}
     `;
   },
   finalMsg(chalObj: IChallenge, stats: IFinalObj, isNotEnd?: boolean | undefined) {
+    console.log('stats 2', stats)
     const statsRendered = Object.entries(stats).reduce((acc, [name, stat]) => {
       let res = acc;
       const statStr = stat.reduce(

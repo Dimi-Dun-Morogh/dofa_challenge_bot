@@ -12,6 +12,7 @@ import { joinChallengeHandler } from './handlers/join-challenge';
 import { LeaveChallengeHandler } from './handlers/leave-challenge';
 import { handleReport } from './handlers/process-report';
 import { UserConditionsHandler } from './handlers/user-conditions';
+import { helpHandler } from './handlers/help-handler';
 
 import {
   challengeNameScene,
@@ -59,6 +60,8 @@ stage.hears('exit', (ctx) => ctx.scene.leave());
       if (!admin) return ctx.reply('куда лезешь, это для админов');
       ctx.scene.enter('challengeNameScene');
     });
+
+    bot.command(['/help', '/start'], (ctx) => helpHandler(ctx));
 
     bot.command('/join', (ctx) => joinChallengeHandler(ctx));
     bot.command('/leave', (ctx) => LeaveChallengeHandler(ctx));

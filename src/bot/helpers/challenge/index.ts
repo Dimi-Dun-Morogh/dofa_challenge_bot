@@ -179,17 +179,21 @@ const challenge = {
       res[user.username] = undefined;
       return res;
     }, {} as { [key: string]: undefined });
-
+    console.log('endObj', endObj, '\names', names);
     Object.keys(endObj).forEach((key) => {
       endObj[key] = { ...names };
     });
+
+
+
     reports?.forEach((report) => {
       const { username, date } = report;
+
       const key = new Date(date);
       key.setHours(0);
       key.setMinutes(0);
       key.setSeconds(0);
-      endObj[key.toLocaleString('en-GB', { hour12: false })]![`@${username!}`] = true;
+      endObj[key.toLocaleString('en-GB', { hour12: false })]![`${username!}`] = true;
     });
 
     const final = Object.keys(names).reduce((acc, name) => {
@@ -212,6 +216,9 @@ const challenge = {
 
   userStats(challengeDoc: IChallenge, userName: string) {
     const stats = this.endStats(challengeDoc);
+
+
+
     const message = renderMsgs.finalMsg(challengeDoc, { [userName]: stats[userName] }, true);
     const userConditions = this.getUserConditionsByName(challengeDoc, userName);
     const finalMsg = userConditions ? `Ваши условия:\n${userConditions}\n${message}` : message;
