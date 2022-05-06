@@ -27,7 +27,7 @@ export const textToEmoji = (val: number | string) => {
   let res = '';
   val = String(val);
 
-  if (isNaN(+val)) return dictionary[val];
+  if (Number.isNaN(+val)) return dictionary[val];
 
   if (val === '10') return '\ud83d\udd1f';
   for (let i = 0; i < val.length; i += 1) {

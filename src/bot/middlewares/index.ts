@@ -23,7 +23,7 @@ const isReport = () => (ctx: any, next: any) => {
 
     if (allowed[command]) return next();
   } catch (error) {
-    logger.error(NAMESPACE, error.mesage, error);
+    logger.error(NAMESPACE, error, error);
   }
 };
 
@@ -41,13 +41,4 @@ const isAdmin = async (ctx: Context) => {
   }
 };
 
-const isPrivateChat = () => async (ctx: Context, next: any) => {
-  try {
-    if (ctx.chat?.type === 'private') return await ctx.reply('сорян браток, бот работает в групповых чатах, а не соло диалоге');
-    return next();
-  } catch (error) {
-    logger.error(NAMESPACE, error.message, error);
-  }
-};
-
-export { isReport, isAdmin, isPrivateChat };
+export { isReport, isAdmin };

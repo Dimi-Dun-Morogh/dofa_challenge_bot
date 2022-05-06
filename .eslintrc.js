@@ -24,6 +24,7 @@ module.exports = {
     "no-await-in-loop": "off",
     "no-nested-ternary": "off",
     "no-param-reassign": "off",
+    "class-methods-use-this": "off"
   },
   ignorePatterns: ['.eslintrc.js', '**/front_end']
 };

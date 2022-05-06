@@ -7,21 +7,19 @@ import {
   newConditionsScene,
   deleteChalScene,
   kickUserScene,
-} from './handlers/control-сhallenge/control-сhallenge.scene';
-import { joinChallengeHandler } from './handlers/join-challenge';
-import { LeaveChallengeHandler } from './handlers/leave-challenge';
-import { handleReport } from './handlers/process-report';
-import { UserConditionsHandler } from './handlers/user-conditions';
-import { helpHandler } from './handlers/help-handler';
-
-import {
   challengeNameScene,
   describeChalScene,
   selectTimeScene,
-} from './handlers/start-сhallenge/start-сhallenge.scene';
-import { allStatHandler, myStatHandler } from './handlers/stat-handlers';
+  joinChallengeHandler,
+  LeaveChallengeHandler,
+  handleReport,
+  UserConditionsHandler,
+  allStatHandler,
+  myStatHandler,
+  helpHandler,
+} from './handlers';
 
-import { isAdmin, isPrivateChat } from './middlewares';
+import { isAdmin } from './middlewares';
 
 const { Stage } = Scenes;
 const stage = new Stage<Scenes.SceneContext>([

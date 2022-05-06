@@ -6,7 +6,9 @@ const myStatHandler = async (ctx: Context) => {
   const chatId = ctx.chat?.id;
   const {
     message_id: replyId,
-    from: { username, id, first_name, last_name },
+    from: {
+      username, id, first_name, last_name,
+    },
   } = ctx.message!;
   const challengeDoc = await getCurrentChallenge(chatId!);
 
@@ -19,7 +21,7 @@ const myStatHandler = async (ctx: Context) => {
   today.setMinutes(0);
 
   const isThereReport = challengeDoc.reports?.some(
-    ({ date, user_id }) => date > Number(today) && user_id === id
+    ({ date, user_id }) => date > Number(today) && user_id === id,
   );
 
   const defineUsername = username ? `@${username}` : `${first_name} ${last_name || ''}`;
